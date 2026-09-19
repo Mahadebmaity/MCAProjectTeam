@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+
+  <div class="login-wrapper">
+
+```
+<div class="login-card">
+
+  <div class="brand">
+    <h1>Welcome Back</h1>
+    <p>Please enter your details to sign in</p>
+  </div>
+
+  <form id="loginForm">
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Enter your email address"
+        required
+      >
+    </div>
+
+    <div class="form-group">
+
+      <div class="password-label">
+        <label for="password">Password</label>
+
+        <a href="forgot-password.html" class="forgot-link">Forgot Password?</a>
+         
+      </div>
+
+      <div class="password-box">
+
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          required
+        >
+
+        <button
+          type="button"
+          class="show-password"
+          id="togglePassword"
+        >
+          Show
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="login-options">
+
+      <label class="remember-me">
+        <input type="checkbox" id="rememberMe">
+        <span>Remember me</span>
+      </label>
+
+    </div>
+
+    <button type="submit" class="login-btn">
+      Sign In
+    </button>
+
+    <p id="message"></p>
+
+  </form>
+
+  <div class="divider">
+    <span>New here?</span>
+  </div>
+
+  <p class="register-text">
+    Don't have an account?
+    <a href="registration.html">Create Account</a>
+  </p>
+
+</div>
+```
+
+  </div>
+
+  <script src="js/login.js"></script>
+
+</body>
+</html>
