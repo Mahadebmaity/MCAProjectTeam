@@ -24,6 +24,7 @@ collaborative version control using Git & GitHub, and structured team-based work
 - [x] HTML page skeleton & semantic structure
 - [x] Responsive Navbar
 - [x] Hero Banner section
+- [x] Registration Page
 - [ ] *(Add your features here as they are completed)*
 
 ---
@@ -47,7 +48,7 @@ For the next step follow my provided PDF file
 | # | Name| Responsibilities |
 |---|------|-----------------|
 | 1 | **Mahadeb** | HTML page skeleton, Responsive Navbar, Hero Banner |
-| 2 | *(Member Name 1)* | *(Describe task here)* |
+| 2 | **Jayanta** | Registration Page UI, form validation, responsive styling |
 | 3 | *(Member Name 2)* | *(Describe task here)* |
 | 4 | *(Member Name 4)* | *(Describe task here)* |
 
