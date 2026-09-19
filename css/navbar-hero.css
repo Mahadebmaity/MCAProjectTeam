@@ -1,0 +1,528 @@
+/* ==========================================================================
+   NAVBAR + HERO SLIDER
+   --------------------------------------------------------------------------
+   Team-project safe: every class starts with  nb / hero / nh-  and every
+   variable starts with  --nh-  so it will not clash with other pages.
+   No global element styles (no body, h1, a, ul rules outside our components).
+
+   Sections:
+   1. Design tokens (colors, fonts, sizes)  <- change the look here
+   2. Shared buttons
+   3. Navbar
+   4. Hero slider
+   5. Reduced motion
+   ========================================================================== */
+
+
+/* 1. DESIGN TOKENS ------------------------------------------------------- */
+:root {
+  --nh-ink:   #10262B;   /* dark text, hero overlay */
+  --nh-teal:  #1F7A6D;   /* hover / focus on light areas */
+  --nh-amber: #F4B740;   /* main call-to-action */
+  --nh-paper: #FAFAF7;   /* navbar background */
+  --nh-line:  #E3E6E1;   /* borders */
+  --nh-white: #FFFFFF;
+
+  --nh-font-head: "Bricolage Grotesque", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --nh-font-body: "Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  --nh-header-h: 64px;
+  --nh-max: 1200px;
+  --nh-gutter: clamp(1rem, 4vw, 2rem);
+  --nh-radius: 10px;
+}
+
+@media (min-width: 900px) {
+  :root { --nh-header-h: 76px; }
+}
+
+
+/* The ONLY rule that is not scoped to our components.
+   It stops the sticky navbar from covering the top of a section when
+   someone clicks a link like #about. */
+html { scroll-padding-top: var(--nh-header-h); }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* The page reset (body margin, box-sizing, image sizing) lives in global.css.
+   If you don't use global.css, add this to your own CSS:
+   body { margin: 0; }
+*/
+
+/* Scoped box-sizing (only for our components) */
+.nb, .nb *, .nb *::before, .nb *::after,
+.hero, .hero *, .hero *::before, .hero *::after,
+.nb-skip {
+  box-sizing: border-box;
+}
+
+
+/* 2. SHARED BUTTONS ------------------------------------------------------ */
+.nh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;                 /* comfortable touch target */
+  padding: 0 1.25rem;
+  border: 1.5px solid transparent;
+  border-radius: var(--nh-radius);
+  font: 600 0.95rem/1 var(--nh-font-body);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+.nh-btn:active { transform: translateY(1px); }
+
+.nh-btn--lg { min-height: 52px; padding: 0 1.75rem; font-size: 1rem; }
+
+/* Amber = primary action */
+.nh-btn--solid { background: var(--nh-amber); color: var(--nh-ink); }
+.nh-btn--solid:hover { background: #FFC85C; }
+
+/* Outline on light background (navbar) */
+.nh-btn--outline { border-color: var(--nh-ink); color: var(--nh-ink); background: transparent; }
+.nh-btn--outline:hover { background: var(--nh-ink); color: var(--nh-white); }
+
+/* Outline on dark background (hero) */
+.nh-btn--light { border-color: rgba(255, 255, 255, .7); color: var(--nh-white); background: rgba(255, 255, 255, .06); }
+.nh-btn--light:hover { background: var(--nh-white); color: var(--nh-ink); border-color: var(--nh-white); }
+
+
+/* 3. NAVBAR -------------------------------------------------------------- */
+.nb-skip {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 2000;
+  padding: .75rem 1rem;
+  background: var(--nh-ink);
+  color: var(--nh-white);
+  font: 600 .9rem var(--nh-font-body);
+  border-radius: 0 0 var(--nh-radius) var(--nh-radius);
+  text-decoration: none;
+}
+.nb-skip:focus { top: 0; }
+
+.nb {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--nh-paper);
+  border-bottom: 1px solid var(--nh-line);
+  font-family: var(--nh-font-body);
+  transition: box-shadow .25s ease;
+}
+.nb.is-scrolled { box-shadow: 0 8px 24px -14px rgba(16, 38, 43, .45); }
+
+.nb__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: var(--nh-header-h);
+  max-width: var(--nh-max);
+  margin-inline: auto;
+  padding-inline: var(--nh-gutter);
+}
+
+/* Brand */
+.nb__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  color: var(--nh-ink);
+  text-decoration: none;
+}
+.nb__logo {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--nh-teal);
+}
+.nb__logo::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--nh-amber);
+}
+.nb__name {
+  font: 700 1.3rem/1 var(--nh-font-head);
+  letter-spacing: -.01em;
+}
+
+/* Hamburger (mobile) */
+.nb__toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1.5px solid var(--nh-line);
+  border-radius: var(--nh-radius);
+  background: var(--nh-white);
+  color: var(--nh-ink);
+  cursor: pointer;
+}
+.nb__bars { position: relative; width: 20px; height: 14px; display: block; }
+.nb__bars span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform .25s ease, opacity .2s ease, top .25s ease;
+}
+.nb__bars span:nth-child(1) { top: 0; }
+.nb__bars span:nth-child(2) { top: 6px; }
+.nb__bars span:nth-child(3) { top: 12px; }
+
+.nb.is-open .nb__bars span:nth-child(1) { top: 6px; transform: rotate(45deg); }
+.nb.is-open .nb__bars span:nth-child(2) { opacity: 0; }
+.nb.is-open .nb__bars span:nth-child(3) { top: 6px; transform: rotate(-45deg); }
+
+/* Menu panel (mobile: drops down under the bar) */
+.nb__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-height: calc(100vh - var(--nh-header-h));
+  max-height: calc(100svh - var(--nh-header-h));
+  overflow-y: auto;
+  padding: .5rem var(--nh-gutter) 1.5rem;
+  background: var(--nh-paper);
+  border-bottom: 1px solid var(--nh-line);
+  box-shadow: 0 18px 30px -20px rgba(16, 38, 43, .5);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
+}
+.nb.is-open .nb__menu {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+
+.nb__links { list-style: none; margin: 0; padding: 0; }
+.nb__links li { margin: 0; }
+
+.nb__link {
+  position: relative;
+  display: block;
+  padding: .95rem 0;
+  border-bottom: 1px solid var(--nh-line);
+  color: var(--nh-ink);
+  font: 500 1.05rem/1.2 var(--nh-font-body);
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.nb__link:hover { color: var(--nh-teal); }
+.nb__link[aria-current] { color: var(--nh-teal); font-weight: 600; }
+
+.nb__auth {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+}
+
+/* Keyboard focus (light background) */
+.nb a:focus-visible,
+.nb button:focus-visible,
+.nb-skip:focus-visible {
+  outline: 3px solid var(--nh-teal);
+  outline-offset: 3px;
+}
+
+/* Desktop layout */
+@media (min-width: 900px) {
+  .nb__toggle { display: none; }
+
+  .nb__menu {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    margin-left: auto;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  .nb__links { display: flex; gap: .25rem; }
+
+  .nb__link {
+    padding: .6rem .9rem;
+    border-bottom: 0;
+    border-radius: 8px;
+    font-size: .98rem;
+  }
+  .nb__link:hover { background: rgba(31, 122, 109, .09); }
+
+  /* small bar under the current page */
+  .nb__link[aria-current]::after {
+    content: "";
+    position: absolute;
+    left: .9rem;
+    right: .9rem;
+    bottom: 2px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--nh-amber);
+  }
+
+  .nb__auth { display: flex; gap: .6rem; }
+}
+
+
+/* 4. HERO SLIDER --------------------------------------------------------- */
+.hero {
+  --nh-interval: 6s;          /* time each slide stays on screen */
+
+  position: relative;
+  height: clamp(520px, calc(100vh - var(--nh-header-h)), 760px);
+  height: clamp(520px, calc(100svh - var(--nh-header-h)), 760px);
+  overflow: hidden;
+  background: var(--nh-ink);
+  color: var(--nh-white);
+  font-family: var(--nh-font-body);
+}
+
+.hero__viewport {
+  position: absolute;
+  inset: 0;
+  touch-action: pan-y;        /* vertical scroll still works while swiping sideways */
+}
+
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+.hero__slide.is-active { opacity: 1; z-index: 1; }
+
+.hero__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.06);
+  transition: transform 7s ease-out;
+}
+.hero__slide.is-active .hero__img { transform: scale(1); }
+
+/* dark overlay so text is always readable, whatever the photo */
+.hero__slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(16, 38, 43, .55) 0%, rgba(16, 38, 43, .78) 100%);
+}
+@media (min-width: 800px) {
+  .hero__slide::before {
+    background:
+      linear-gradient(90deg, rgba(16, 38, 43, .9) 0%, rgba(16, 38, 43, .62) 48%, rgba(16, 38, 43, .12) 100%);
+  }
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  max-width: var(--nh-max);
+  margin-inline: auto;
+  padding: 0 var(--nh-gutter) 5.5rem;   /* bottom space for the controls */
+}
+
+.hero__content {
+  max-width: 40rem;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .6s ease .25s, transform .6s ease .25s;
+}
+.hero__slide.is-active .hero__content { opacity: 1; transform: none; }
+
+.hero__title {
+  margin: 0 0 1rem;
+  font: 700 clamp(2rem, 1.2rem + 4.6vw, 4.25rem)/1.05 var(--nh-font-head);
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+
+.hero__text {
+  max-width: 34rem;
+  margin: 0 0 2rem;
+  font: 400 clamp(1rem, .95rem + .35vw, 1.2rem)/1.6 var(--nh-font-body);
+  color: rgba(255, 255, 255, .88);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+/* Controls bar */
+.hero__controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding-block: 1rem 1.25rem;
+}
+.hero__controls-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: var(--nh-max);
+  margin-inline: auto;
+  padding-inline: var(--nh-gutter);
+}
+
+/* Progress dots */
+.hero__dots { display: flex; gap: .25rem; }
+
+.hero__dot {
+  display: grid;
+  align-content: center;
+  width: 44px;                /* big hit area, thin bar inside */
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.hero__dot-track {
+  display: block;
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, .35);
+  transition: background-color .2s ease;
+}
+.hero__dot:hover .hero__dot-track { background: rgba(255, 255, 255, .6); }
+
+.hero__dot-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--nh-amber);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.hero__dot.is-active .hero__dot-fill {
+  animation: hero-fill var(--nh-interval) linear forwards;
+}
+@keyframes hero-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Pause the timer: user paused / hero off-screen / keyboard focus inside.
+   (Kept as separate rules so one unsupported selector can't break the others.) */
+.hero[data-playing="false"] .hero__dot.is-active .hero__dot-fill { animation-play-state: paused; }
+.hero[data-inview="false"]  .hero__dot.is-active .hero__dot-fill { animation-play-state: paused; }
+.hero:has(:focus-visible)   .hero__dot.is-active .hero__dot-fill { animation-play-state: paused; }
+@media (hover: hover) {
+  .hero:hover .hero__dot.is-active .hero__dot-fill { animation-play-state: paused; }
+}
+
+/* Round buttons */
+.hero__buttons { display: flex; gap: .6rem; }
+
+.hero__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1.5px solid rgba(255, 255, 255, .55);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .1);
+  color: var(--nh-white);
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+.hero__btn:hover { background: var(--nh-white); color: var(--nh-ink); border-color: var(--nh-white); }
+.hero__btn[hidden] { display: none; }
+
+/* show pause icon while playing, play icon while paused */
+.hero__icon-play { display: none; }
+.hero[data-playing="false"] .hero__icon-pause { display: none; }
+.hero[data-playing="false"] .hero__icon-play  { display: block; }
+
+/* Keyboard focus (dark background) */
+.hero a:focus-visible,
+.hero button:focus-visible {
+  outline: 3px solid var(--nh-amber);
+  outline-offset: 3px;
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .hero__actions .nh-btn { flex: 1 1 100%; }   /* stacked, full-width buttons */
+  .hero__dot { width: 36px; }
+  .hero__buttons { gap: .4rem; }
+  .hero__btn { width: 40px; height: 40px; }
+}
+
+/* Short landscape phones: keep content inside the hero */
+@media (max-height: 560px) and (orientation: landscape) {
+  .hero__title { font-size: 1.9rem; margin-bottom: .6rem; }
+  .hero__text  { margin-bottom: 1rem; }
+  .hero__actions .nh-btn--lg { min-height: 44px; }
+}
+
+
+/* 5. REDUCED MOTION ------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .hero__slide,
+  .hero__img,
+  .hero__content,
+  .nb__menu,
+  .nb__bars span,
+  .nh-btn {
+    transition: none;
+  }
+  .hero__img { transform: none; }
+  .hero__content { transform: none; }
+
+  /* no autoplay: active dot is simply shown as full */
+  .hero__dot.is-active .hero__dot-fill { animation: none; transform: scaleX(1); }
+}
