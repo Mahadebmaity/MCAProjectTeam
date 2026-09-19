@@ -25,6 +25,8 @@ collaborative version control using Git & GitHub, and structured team-based work
 - [x] Responsive Navbar
 - [x] Hero Banner section
 - [x] Registration Page
+- [x] Login Page
+- [x] Forgot Password Page
 - [ ] *(Add your features here as they are completed)*
 
 ---
@@ -48,7 +50,7 @@ For the next step follow my provided PDF file
 | # | Name| Responsibilities |
 |---|------|-----------------|
 | 1 | **Mahadeb** | HTML page skeleton, Responsive Navbar, Hero Banner |
-| 2 | **Jayanta** | Registration Page UI, form validation, responsive styling |
+| 2 | **Jayanta** | Registration Page, Login Page, Forgot Password Page, form validation, responsive styling|
 | 3 | **Joyee** | User Dashboard UI, Sidebar navigation, summary cards, feature cards, responsive layout |
 | 4 | *(Member Name 4)* | *(Describe task here)* |
 
