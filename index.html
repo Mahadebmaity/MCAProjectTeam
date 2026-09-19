@@ -1,11 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCA Project Team Web App </title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MCA Project Team Web App</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/navbar-hero.css" />
 </head>
+
 <body>
-    
+    <!-- ============================================================
+       NAVBAR  (copy from here ...)
+       ============================================================ -->
+    <a class="nb-skip" href="#main">Skip to main content</a>
+
+    <header class="nb" id="siteHeader">
+        <nav class="nb__bar" aria-label="Main">
+            <!-- Brand: change the text and the href -->
+            <a class="nb__brand" href="#hero" aria-label="MCA Project Team">
+                <span class="nb__logo" aria-hidden="true"></span>
+                <span class="nb__name">MCA Project Team</span>
+            </a>
+
+            <button class="nb__toggle" type="button" aria-expanded="false" aria-controls="navMenu"
+                aria-label="Open menu">
+                <span class="nb__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+            </button>
+
+            <div class="nb__menu" id="navMenu">
+                <!-- Single-page landing: each href points to a section id on this page.
+             Give your sections matching ids, e.g. <section id="about">.
+             The link of the section on screen is highlighted automatically. -->
+                <ul class="nb__links">
+                    <li>
+                        <a class="nb__link" href="#hero" aria-current="page">Home</a>
+                    </li>
+                    <li><a class="nb__link" href="#about">About</a></li>
+                    <li><a class="nb__link" href="#services">Services</a></li>
+                    <li><a class="nb__link" href="#contact">Contact</a></li>
+                </ul>
+
+                <!-- Only the entry points. Point these to your login / register pages. -->
+                <div class="nb__auth">
+                    <a class="nh-btn nh-btn--outline" href="login.html">Log in</a>
+                    <a class="nh-btn nh-btn--solid" href="registration.html">Register</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- ... to here (NAVBAR) -->
+
+    <main id="main">
+        <!-- ============================================================
+         HERO SLIDER  (copy from here ...)
+         Edit the text, links and image URLs of each slide.
+         To add a slide: duplicate one <article> AND one dot <button>.
+         ============================================================ -->
+        <section class="hero" id="hero" data-playing="true" data-inview="true" aria-roledescription="carousel"
+            aria-label="Featured highlights">
+            <div class="hero__viewport" aria-live="off">
+                <!-- Slide 1 -->
+                <article class="hero__slide is-active" role="group" aria-roledescription="slide" aria-label="1 of 3">
+                    <img class="hero__img"
+                        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1800&q=70"
+                        alt="" fetchpriority="high" />
+                    <!-- src="https://lh3.googleusercontent.com/d/YOUR_FILE_ID"  drive link will be share here when images are uploaded to drive-->
+                    <div class="hero__inner">
+                        <div class="hero__content">
+                            <h1 class="hero__title">Learn, build and grow together</h1>
+                            <p class="hero__text">
+                                One place for your team's work, ideas and progress. Simple to
+                                start, easy to share.
+                            </p>
+                            <div class="hero__actions">
+                                <a class="nh-btn nh-btn--solid nh-btn--lg" href="registration.html">Get started</a>
+                                <a class="nh-btn nh-btn--light nh-btn--lg" href="#services">Explore services</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Slide 2 -->
+                <article class="hero__slide" role="group" aria-roledescription="slide" aria-label="2 of 3"
+                    aria-hidden="true" inert>
+                    <img class="hero__img"
+                        src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1800&q=70"
+                        alt="" loading="lazy" />
+                    <div class="hero__inner">
+                        <div class="hero__content">
+                            <h2 class="hero__title">
+                                Everything organised, nothing missed
+                            </h2>
+                            <p class="hero__text">
+                                Keep every task, file and update where the whole team can find
+                                it.
+                            </p>
+                            <div class="hero__actions">
+                                <a class="nh-btn nh-btn--solid nh-btn--lg" href="#services">See services</a>
+                                <a class="nh-btn nh-btn--light nh-btn--lg" href="#about">About us</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Slide 3 -->
+                <article class="hero__slide" role="group" aria-roledescription="slide" aria-label="3 of 3"
+                    aria-hidden="true" inert>
+                    <img class="hero__img"
+                        src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1800&q=70"
+                        alt="" loading="lazy" />
+                    <div class="hero__inner">
+                        <div class="hero__content">
+                            <h2 class="hero__title">Start in under a minute</h2>
+                            <p class="hero__text">
+                                Register or log in and pick up right where you left off.
+                            </p>
+                            <div class="hero__actions">
+                                <a class="nh-btn nh-btn--solid nh-btn--lg" href="registration.html">Register</a>
+                                <a class="nh-btn nh-btn--light nh-btn--lg" href="login.html">Log in</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Controls: progress dots (left), pause / previous / next (right) -->
+            <div class="hero__controls">
+                <div class="hero__controls-inner">
+                    <div class="hero__dots" role="group" aria-label="Choose slide">
+                        <button class="hero__dot is-active" type="button" aria-label="Go to slide 1"
+                            aria-current="true">
+                            <span class="hero__dot-track"><span class="hero__dot-fill"></span></span>
+                        </button>
+                        <button class="hero__dot" type="button" aria-label="Go to slide 2">
+                            <span class="hero__dot-track"><span class="hero__dot-fill"></span></span>
+                        </button>
+                        <button class="hero__dot" type="button" aria-label="Go to slide 3">
+                            <span class="hero__dot-track"><span class="hero__dot-fill"></span></span>
+                        </button>
+                    </div>
+
+                    <div class="hero__buttons">
+                        <button class="hero__btn hero__play" type="button" aria-label="Pause slideshow">
+                            <svg class="hero__icon-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                                <path fill="currentColor" d="M7 5h4v14H7zM13 5h4v14h-4z" />
+                            </svg>
+                            <svg class="hero__icon-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                                <path fill="currentColor" d="M8 5v14l11-7z" />
+                            </svg>
+                        </button>
+                        <button class="hero__btn hero__prev" type="button" aria-label="Previous slide">
+                            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                                <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                    stroke-linejoin="round" d="M15 5l-7 7 7 7" />
+                            </svg>
+                        </button>
+                        <button class="hero__btn hero__next" type="button" aria-label="Next slide">
+                            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                                <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                    stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ... to here (HERO) -->
+
+        <!-- Team member add section below this line -->
+    </main>
+
+    <script src="js/navbar-hero.js"></script>
 </body>
+
 </html>

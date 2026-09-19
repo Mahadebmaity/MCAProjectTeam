@@ -1,0 +1,63 @@
+/* ==========================================================================
+   GLOBAL.CSS  -  base styles for the whole landing page
+   --------------------------------------------------------------------------
+   Load this FIRST, then navbar-hero.css, then the other sections' CSS:
+
+     <link rel="stylesheet" href="global.css">
+     <link rel="stylesheet" href="navbar-hero.css">
+
+   It reuses the --nh-* colors and fonts from navbar-hero.css, so the whole
+   page matches the navbar. If you change the look, change it there once.
+
+   Only element-level basics are here. Anything specific to a section
+   (about, services, contact ...) belongs in that section's own class.
+   ========================================================================== */
+
+
+/* 1. RESET  (the 3 things the navbar/hero need) --------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body { margin: 0; }                      /* removes the white gap around the navbar */
+
+img, svg, video { max-width: 100%; }     /* images never overflow on small screens */
+img { display: block; }
+
+
+/* 2. BASE TYPOGRAPHY ------------------------------------------------------ */
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--nh-font-body, system-ui, -apple-system, "Segoe UI", sans-serif);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--nh-ink, #10262B);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0 0 .6em;
+  font-family: var(--nh-font-head, inherit);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+}
+h2 { font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem); }
+h3 { font-size: clamp(1.2rem, 1rem + .8vw, 1.5rem); }
+
+p { margin: 0 0 1em; }
+
+
+/* 3. LAYOUT HELPERS FOR YOUR OTHER SECTIONS ------------------------------- */
+/* Same width and side padding as the navbar and hero, so everything lines up. */
+.site-container {
+  max-width: var(--nh-max, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--nh-gutter, 1rem);
+}
+
+/* Vertical spacing between sections */
+.site-section { padding-block: clamp(3rem, 8vw, 6rem); }
+
+
+/* 4. FOCUS  (keyboard users need to see where they are) ------------------- */
+:focus-visible { outline: 3px solid var(--nh-teal, #1F7A6D); outline-offset: 3px; }
