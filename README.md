@@ -49,7 +49,7 @@ For the next step follow my provided PDF file
 |---|------|-----------------|
 | 1 | **Mahadeb** | HTML page skeleton, Responsive Navbar, Hero Banner |
 | 2 | **Jayanta** | Registration Page UI, form validation, responsive styling |
-| 3 | *(Member Name 2)* | *(Describe task here)* |
+| 3 | **Joyee** | User Dashboard UI, Sidebar navigation, summary cards, feature cards, responsive layout |
 | 4 | *(Member Name 4)* | *(Describe task here)* |
 
 > **Note for Team Members:** Replace the placeholder rows above with your actual name, role, and completed tasks before pushing your changes.
