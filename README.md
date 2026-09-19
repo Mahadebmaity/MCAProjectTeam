@@ -26,7 +26,7 @@ collaborative version control using Git & GitHub, and structured team-based work
 - [x] Hero Banner section
 - [x] Registration Page
 - [x] Login Page
-- [x]Forgot Password Page
+- [x] Forgot Password Page
 - [ ] *(Add your features here as they are completed)*
 
 ---
