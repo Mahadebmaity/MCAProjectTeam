@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCA Project Team - Dashboard</title>
+
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">
+                <span></span>
+            </div>
+
+            <div>
+                <h2>MCA Project Team</h2>
+                <p>Build · Collaborate · Grow</p>
+            </div>
+        </div>
+
+        <nav class="menu">
+
+            <a href="#" class="menu-item active">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">👤</span>
+                <span>Profile</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">💻</span>
+                <span>Projects</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">💡</span>
+                <span>Services</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">📝</span>
+                <span>Reports</span>
+            </a>
+
+            <a href="#" class="menu-item notification-menu">
+                <span class="icon">🔕</span>
+                <span>Notifications</span>
+                <span class="notification-count"></span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+
+        <!-- Quote -->
+        <div class="sidebar-quote">
+
+            <div class="quote-line"></div>
+
+            <p>
+                Great things<br>
+                happen when<br>
+                teams grow<br>
+                together.
+            </p>
+
+            <div class="quote-bottom-line"></div>
+
+        </div>
+
+
+        <!-- Logout -->
+        <a href="#" class="logout">
+            <span class="logout-icon">↪</span>
+            <span>Logout</span>
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <!-- Top Bar -->
+        <header class="topbar">
+
+            <div class="search-box">
+                <span class="search-icon">⌕</span>
+                <input
+                    type="text"
+                    placeholder="Search projects, tasks, or anything..."
+                >
+            </div>
+
+
+            <div class="user-area">
+
+                <div class="bell">
+                    🔕
+                    <span></span>
+                </div>
+
+                <div class="avatar">👤</div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Content -->
+        <div class="content">
+
+
+            <!-- WELCOME BANNER -->
+            <section class="welcome-banner">
+
+                <div class="welcome-text">
+
+                    <h1>
+                        Welcome back,
+                        <span></span>
+                        <b>👋</b>
+                    </h1>
+
+                    <p>
+                        Keep track of your projects, tasks and progress.
+                    </p>
+
+                    <p>
+                        Let's build something great together.
+                    </p>
+
+                    <a href="#" class="yellow-btn">
+                        View Projects
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+                <div class="banner-decoration">
+                    <span class="idea">Ideas<br>into<br>Impact</span>
+                </div>
+
+            </section>
+
+
+            <!--SUMMARY CARDS-->
+            <section class="summary-grid">
+
+                <div class="summary-card">
+                    <div class="summary-icon green">
+                        📂
+                    </div>
+
+                    <div>
+                        <p>Total Projects</p>
+                        <h2>4</h2>
+                        <span>Across all domains</span>
+                    </div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-icon purple">
+                        👥
+                    </div>
+
+                    <div>
+                        <p>Active Members</p>
+                        <h2>4</h2>
+                        <span>Working together</span>
+                    </div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-icon yellow">
+                        💹
+                    </div>
+
+                    <div>
+                        <p>Active Projects</p>
+                        <h2>2</h2>
+                        <span>Currently in progress</span>
+                    </div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-icon red">
+                        ✅
+                    </div>
+
+                    <div>
+                        <p>Completed Projects</p>
+                        <h2>2</h2>
+                        <span>Successfully completed</span>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- PROJECTS + ACTIVITY-->
+            <section class="middle-grid">
+
+                <!-- Projects -->
+                <div class="projects-section">
+
+                    <div class="section-heading">
+                        <div>
+                            <h2>My Projects</h2>
+                            <p>Projects you are currently working on</p>
+                        </div>
+
+                        <a href="#">View All →</a>
+                    </div>
+
+
+                    <div class="project-grid">
+
+                        <!-- Project 1 -->
+                        <div class="project-card">
+
+                            <div class="project-top">
+                                <div class="project-icon blue">▣</div>
+                                <span class="status blue-status">
+                                    In Progress
+                                </span>
+                            </div>
+
+                            <h3>Project One</h3>
+
+                            <p>
+                                A team project focused on
+                                research and development.
+                            </p>
+
+                            <div class="progress">
+                                <div class="progress-bar blue-bar"></div>
+                            </div>
+
+                            <div class="project-bottom">
+                                <span>60% complete</span>
+                                <button>→</button>
+                            </div>
+
+                        </div>
+
+
+                        <!-- Project 2 -->
+                        <div class="project-card">
+
+                            <div class="project-top">
+                                <div class="project-icon green">▤</div>
+                                <span class="status yellow-status">
+                                    In Progress
+                                </span>
+                            </div>
+
+                            <h3>Project Two</h3>
+
+                            <p>
+                                Academic project for
+                                learning and practice.
+                            </p>
+
+                            <div class="progress">
+                                <div class="progress-bar green-bar"></div>
+                            </div>
+
+                            <div class="project-bottom">
+                                <span>40% complete</span>
+                                <button>→</button>
+                            </div>
+
+                        </div>
+
+
+                        <!-- Project 3 -->
+                        <div class="project-card">
+
+                            <div class="project-top">
+                                <div class="project-icon teal">〈/〉</div>
+                                <span class="status complete-status">
+                                    Completed
+                                </span>
+                            </div>
+
+                            <h3>Project Three</h3>
+
+                            <p>
+                                Web based project for
+                                team collaboration.
+                            </p>
+
+                            <div class="progress">
+                                <div class="progress-bar teal-bar"></div>
+                            </div>
+
+                            <div class="project-bottom">
+                                <span>100% complete</span>
+                                <button>→</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Recent Activity -->
+                <div class="activity-card">
+
+                    <div class="section-heading">
+                        <div>
+                            <h2>Recent Activity</h2>
+                        </div>
+
+                        <a href="#">View All →</a>
+                    </div>
+
+
+                    <div class="activity-list">
+
+                        <div class="activity">
+                            <div class="activity-dot yellow-dot"></div>
+
+                            <div class="activity-icon folder">
+                                ▰
+                            </div>
+
+                            <div>
+                                <strong>Project One was updated</strong>
+                                <span>2 hours ago</span>
+                            </div>
+                        </div>
+
+
+                        <div class="activity">
+                            <div class="activity-dot blue-dot"></div>
+
+                            <div class="activity-icon people">
+                                ♟
+                            </div>
+
+                            <div>
+                                <strong>New member joined the team</strong>
+                                <span>1 day ago</span>
+                            </div>
+                        </div>
+
+
+                        <div class="activity">
+                            <div class="activity-dot green-dot"></div>
+
+                            <div class="activity-icon document">
+                                ▤
+                            </div>
+
+                            <div>
+                                <strong>Project report was generated</strong>
+                                <span>2 days ago</span>
+                            </div>
+                        </div>
+
+
+                        <div class="activity">
+                            <div class="activity-dot dark-dot"></div>
+
+                            <div class="activity-icon edit">
+                                ▧
+                            </div>
+
+                            <div>
+                                <strong>You updated project details</strong>
+                                <span>3 days ago</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- QUICK ACCESS-->
+            <section class="quick-section">
+
+                <div class="section-heading">
+                    <div>
+                        <h2>Quick Access</h2>
+                        <p>Everything you need, in one place</p>
+                    </div>
+                </div>
+
+
+                <div class="quick-grid">
+
+                    <div class="quick-card">
+                        <div class="quick-icon teal-icon">+</div>
+                        <h3>Create Project</h3>
+                        <p>Start a new project</p>
+                    </div>
+
+
+                    <div class="quick-card">
+                        <div class="quick-icon blue-icon">▤</div>
+                        <h3>View Reports</h3>
+                        <p>Check project reports</p>
+                    </div>
+
+
+                    <div class="quick-card">
+                        <div class="quick-icon yellow-icon">▰</div>
+                        <h3>Team Resources</h3>
+                        <p>Access shared files</p>
+                    </div>
+
+
+                    <div class="quick-card">
+                        <div class="quick-icon green-icon">⌘</div>
+                        <h3>Explore Services</h3>
+                        <p>See available tools</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= SIDE PROMO ================= -->
+            <section class="collaboration-card">
+
+                <div class="promo-line"></div>
+
+                <h2>
+                    Collaborate. Create.<br>
+                    Grow together.
+                </h2>
+
+                <p>
+                    Turn your ideas into real impact
+                    with your team.
+                </p>
+
+                <a href="#" class="yellow-btn">
+                    Explore Services
+                    <span>→</span>
+                </a>
+
+                <div class="promo-shape"></div>
+
+            </section>
+
+
+        </div>
+
+
+        <!-- ================= FOOTER ================= -->
+        <footer class="footer">
+
+            <div>
+                © 2026 MCA Project Team
+                <span>|</span>
+                Built for collaboration and learning
+            </div>
+
+            <div class="footer-links">
+                <a href="#">Live Demo</a>
+                <a href="#">Source Code</a>
+                <a href="#">Report</a>
+                <a href="#">Slides</a>
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>
