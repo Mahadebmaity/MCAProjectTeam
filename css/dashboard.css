@@ -381,10 +381,17 @@ input {
     color: #64798e;
 }
 
+.user-area {
+    display: flex;
+    align-items: center;
+}
+
 .bell {
     font-size: 25px;
-    position: relative;
     margin-right: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .avatar {
     width: 43px;
