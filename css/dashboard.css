@@ -21,9 +21,7 @@ input {
 }
 
 
-/* =========================
-   MAIN DASHBOARD
-========================= */
+/* MAIN DASHBOARD */
 
 .dashboard {
     min-height: 100vh;
@@ -47,9 +45,7 @@ input {
 }
 
 
-/* =========================
-   BRAND
-========================= */
+/* BRAND */
 
 .brand {
     display: flex;
@@ -96,9 +92,7 @@ input {
 }
 
 
-/* =========================
-   MENU
-========================= */
+/* MENU */
 
 .menu {
     padding: 10px 17px;
@@ -144,7 +138,6 @@ input {
 
 .menu-item.active {
     color: #ffffff;
-    /* background: #166477; */
     background: #055652;
 }
 
@@ -200,9 +193,6 @@ input {
 
     left: -235px;
     bottom: -70px;
-
-    /* background: #c4dfe9; */
-    /* background: #117b7574; */
     background: #bde4e2;
 
     border-radius: 55% 45% 60% 40%;
@@ -315,24 +305,17 @@ input {
 }
 
 
-/* =========================
-   MAIN CONTENT
-========================= */
+/* -----MAIN CONTENT----- */
 
 .main-content {
     margin-left: 250px;
-
     width: calc(100% - 250px);
-
     min-height: 100vh;
-
     background: #eef6fa;
 }
 
 
-/* =========================
-   TOP BAR
-========================= */
+/* -----TOP BAR----- */
 
 .topbar {
     height: 76px;
@@ -345,7 +328,7 @@ input {
 }
 
 
-/* Search */
+/* -------Search------- */
 
 .search-box {
     width: 525px;
@@ -398,35 +381,16 @@ input {
     color: #64798e;
 }
 
-
-/* User */
-
-.user-area {
-    display: flex;
-    align-items: center;
-
-    gap: 12px;
-}
-
 .bell {
     font-size: 25px;
-
     position: relative;
-
     margin-right: 7px;
-
-    color: #132f50;
 }
-
-
-
 .avatar {
     width: 43px;
     height: 43px;
 
     border-radius: 50%;
-
-    /* background: #176b8a; */
     background: #055652;
 
     display: flex;
@@ -434,13 +398,39 @@ input {
     justify-content: center;
 
     font-size: 20px;
+   
+
+}
+
+.user-icon {
+    width: 22px;
+    height: 22px;
+    position: relative;
+    display: block;
+}
+
+.user-head {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+    top: 1px;
+    left: 7px;
+}
+
+.user-body {
+    position: absolute;
+    width: 16px;
+    height: 9px;
+    background: #ffffff;
+    border-radius: 10px 10px 3px 3px;
+    bottom: 1px;
+    left: 3px;
 }
 
 
-
-/* =========================
-   CONTENT
-========================= */
+/*============= CONTENT ==============*/
 
 .content {
     padding: 4px 22px 20px;
@@ -457,7 +447,6 @@ input {
     border-radius: 16px;
     overflow: hidden;
 
-    /* MCA logo-এর teal/green colour */
     background: linear-gradient(
         115deg,
         #075b5b 0%,
@@ -471,7 +460,7 @@ input {
 }
 
 
-/* ---------- Soft Curves ---------- */
+/* ======== Soft Curves ======== */
 
 .welcome-banner::before {
     content: "";
@@ -513,7 +502,7 @@ input {
 }
 
 
-/* ---------- Welcome Text ---------- */
+/* ================ Welcome Text =============== */
 
 .welcome-text {
     position: relative;
@@ -546,7 +535,7 @@ input {
 }
 
 
-/* ---------- Description ---------- */
+/* ========= Description ========== */
 
 .welcome-text p {
     margin: 4px 0;
@@ -562,7 +551,7 @@ input {
 }
 
 
-/* ---------- Yellow Button ---------- */
+/* ========= Yellow Button =========== */
 
 .yellow-btn {
     display: inline-flex;
@@ -615,7 +604,7 @@ input {
 }
 
 
-/* Soft curved background */
+/* ===========Soft curved background============ */
 
 .banner-decoration::before {
     content: "";
@@ -636,7 +625,7 @@ input {
 }
 
 
-/* Second small curve */
+/* =========Second small curve========== */
 
 .banner-decoration::after {
     content: "";
@@ -657,7 +646,7 @@ input {
 }
 
 
-/* Ideas into Impact */
+/* ==========Ideas into Impact========== */
 
 .banner-decoration .idea {
     position: absolute;
@@ -683,7 +672,7 @@ input {
 }
 
 
-/* Yellow line */
+/* =========Yellow line========= */
 
 .banner-decoration .idea::after {
     content: "";
@@ -701,7 +690,7 @@ input {
 }
 
 
-/* Small decorative dots */
+/* ==========Small decorative dots============ */
 
 .banner-decoration .idea::before {
     content: "";
@@ -723,7 +712,7 @@ input {
         31px 2px 0 rgba(245, 189, 50, 0.25);
 }
 
-/* small yellow decorative line */
+/* ==========small yellow decorative line============= */
 
 .banner-decoration::after {
     content: "";
@@ -744,7 +733,7 @@ input {
 }
 
 
-/* Ideas text */
+/* ===========Ideas text========== */
 
 .idea {
     color: #ffffff;
@@ -766,7 +755,7 @@ input {
 }
 
 
-/* ---------- Small decorative dots ---------- */
+/* ============Small decorative dots ============= */
 
 .welcome-banner .welcome-text::after {
     content: "";
@@ -789,9 +778,7 @@ input {
 
     opacity: 0.8;
 }
-/* =========================
-   SUMMARY
-========================= */
+/* ==============SUMMARY=============*/
 
 .summary-grid {
     display: grid;
@@ -847,12 +834,12 @@ input {
 }
 
 .summary-icon.yellow {
-    background: #fff2d9;
+    background: #e5e3ff;
     color: #c27c0d;
 }
 
 .summary-icon.red {
-    background: #fde4e7;
+    background: #def4ef;
     color: #d6323e;
 }
 
@@ -873,10 +860,7 @@ input {
 }
 
 
-/* =========================
-   MIDDLE SECTION
-========================= */
-
+/*========== MIDDLE SECTION==========*/
 .middle-grid {
     display: grid;
 
@@ -888,7 +872,7 @@ input {
 }
 
 
-/* Heading */
+/*=========== Heading ===============*/
 
 .section-heading {
     display: flex;
@@ -920,9 +904,7 @@ input {
 }
 
 
-/* =========================
-   PROJECT CARDS
-========================= */
+/*PROJECT CARDS */
 
 .project-grid {
     display: grid;
@@ -1093,9 +1075,7 @@ input {
 }
 
 
-/* =========================
-   ACTIVITY
-========================= */
+/*ACTIVITY*/
 
 .activity-card {
     background: #ffffff;
@@ -1225,19 +1205,26 @@ input {
 }
 
 
-/* =========================
-   QUICK ACCESS
-========================= */
+/* QUICK ACCESS + SIDE PROMO*/
+
+.quick-promo-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 20px;
+    align-items: stretch;
+    margin-top: 25px;
+}
+
+
+/* Quick Access */
 
 .quick-section {
-    margin-top: 25px;
+    min-width: 0;
 }
 
 .quick-grid {
     display: grid;
-
     grid-template-columns: repeat(4, 1fr);
-
     gap: 14px;
 }
 
@@ -1293,22 +1280,17 @@ input {
 
 .quick-card h3 {
     font-size: 14px;
-
     color: #10294a;
 }
 
 .quick-card p {
     font-size: 12px;
-
     color: #62768b;
-
     margin-top: 4px;
 }
 
 
-/* =========================
-   COLLABORATION CARD
-========================= */
+/* ================COLLABORATION CARD=================== */
 
 .collaboration-card {
     background: #15596b;
@@ -1317,7 +1299,7 @@ input {
 
     padding: 18px 25px;
 
-    margin-top: 15px;
+    margin-top: 0;
 
     position: relative;
 
@@ -1389,10 +1371,7 @@ input {
     transform: rotate(20deg);
 }
 
-
-/* =========================
-   FOOTER
-========================= */
+/* ================ FOOTER =============== */
 
 .footer {
     margin-top: 5px;
@@ -1429,9 +1408,7 @@ input {
 }
 
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* ====================== RESPONSIVE ==================== */
 
 @media (max-width: 1200px) {
 
@@ -1543,5 +1520,3 @@ input {
 .sidebar::-webkit-scrollbar-thumb:hover {
     background: #125b75;
 }
-
-

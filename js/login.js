@@ -55,4 +55,7 @@ loginForm.addEventListener("submit", function (event) {
     email,
     password
   });
+
+  //Redirect to Dashboard
+  window.location.href = "dashboard.html";
 });
