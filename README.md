@@ -52,7 +52,7 @@ For the next step follow my provided PDF file
 | 1 | **Mahadeb** | HTML page skeleton, Responsive Navbar, Hero Banner |
 | 2 | **Jayanta** | Registration Page, Login Page, Forgot Password Page, form validation, responsive styling|
 | 3 | **Joyee** | User Dashboard UI, Sidebar navigation, summary cards, feature cards, responsive layout |
-| 4 | *(Member Name 4)* | *(Describe task here)* |
+| 4 | **Kanika** | Builds 4 Member Profile Showcase cards, Includes member photos, bios, and social links. 
 
 > **Note for Team Members:** Replace the placeholder rows above with your actual name, role, and completed tasks before pushing your changes.
 
