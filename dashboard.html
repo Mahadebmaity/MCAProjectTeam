@@ -6,6 +6,7 @@
     <title>MCA Project Team - Dashboard</title>
 
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/theme.css">
 </head>
 
 <body>
@@ -108,19 +109,29 @@
 
             <div class="user-area">
 
-                <div class="bell">
-                    🔕
-                    <span></span>
-                </div>
+    <button
+        type="button"
+        class="theme-toggle"
+        data-theme-toggle
+        aria-label="Switch to dark mode"
+        aria-pressed="false"
+    >
+        ☾ Dark
+    </button>
 
-                <div class="avatar">
-                    <span class="user-icon">
-                        <span class="user-head"></span>
-                        <span class="user-body"></span>
-                     </span>
-                </div>
+    <div class="bell">
+        🔕
+        <span></span>
+    </div>
 
-            </div>
+    <div class="avatar">
+        <span class="user-icon">
+            <span class="user-head"></span>
+            <span class="user-body"></span>
+        </span>
+    </div>
+
+</div>
 
         </header>
 
@@ -492,6 +503,6 @@
     </main>
 
 </div>
-
+<script src="js/theme.js"></script>
 </body>
 </html>

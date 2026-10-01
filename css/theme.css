@@ -1,0 +1,93 @@
+/* Load last on every full page. Light mode retains the original design. */
+:root { color-scheme: light; --theme-surface: #fff; --theme-text: #202b3b; --theme-line: #d5dce5; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --theme-surface: #182333; --theme-text: #e8eef5; --theme-line: #35465b;
+  --nh-paper: #182333; --nh-line: #35465b;
+  --page: #101925; --bg: #152030; --card: #1b283a;
+  --text: #e8eef5; --muted: #afbdcf; --line: #35465b; --accent: #a4b4ff;
+}
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 0 14px; border: 1px solid var(--theme-line);
+  border-radius: 10px; background: var(--theme-surface); color: var(--theme-text);
+  font: 600 14px/1.2 system-ui, sans-serif; white-space: nowrap; cursor: pointer;
+  flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: #667eea; }
+.theme-toggle:focus-visible { outline: 3px solid #8da4ff; outline-offset: 3px; }
+.theme-toolbar { display: flex; justify-content: flex-end; margin-bottom: 18px; }
+.user-area .theme-toggle { margin-right: 12px; }
+:root[data-theme="dark"] body { background-color: #101925; color: #e8eef5; }
+:root[data-theme="dark"] .auth-page { background: linear-gradient(135deg, #101925, #24233f); }
+:root[data-theme="dark"] :is(.login-card, .registration-card, .forgot-card) { background: #182333; }
+:root[data-theme="dark"] :is(.brand h1, .registration-card h2, .header h1, .form-group label, .terms) { color: #e8eef5; }
+:root[data-theme="dark"] :is(.brand p, .subtitle, .header p, .remember-me, .register-text, .login-text, .divider) { color: #afbdcf; }
+:root[data-theme="dark"] .form-group input { background: #101925; border-color: #40516a; color: #e8eef5; }
+:root[data-theme="dark"] .form-group input::placeholder { color: #a1afc1; }
+:root[data-theme="dark"] :is(.forgot-link, .show-password, .toggle-password, .register-text a, .login-text a) { color: #a4b4ff; }
+:root[data-theme="dark"] .divider::before, :root[data-theme="dark"] .divider::after { background: #35465b; }
+:root[data-theme="dark"] :is(.nb__brand, .nb__link, .nh-btn--outline) { color: #e8eef5; }
+:root[data-theme="dark"] .nh-btn--outline { border-color: #8194aa; }
+:root[data-theme="dark"] .nb__menu { background: #182333; }
+:root[data-theme="dark"] .nb__toggle { background: #182333; color: #e8eef5; }
+:root[data-theme="dark"] body { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .sidebar { background: #1b283a; }
+:root[data-theme="dark"] .brand h2 { color: #bdcddd; }
+:root[data-theme="dark"] .brand p { color: #bdcddd; }
+:root[data-theme="dark"] .menu-item { color: #bdcddd; }
+:root[data-theme="dark"] .menu-item .icon { color: #bdcddd; }
+:root[data-theme="dark"] .notification-count { color: #bdcddd; }
+:root[data-theme="dark"] .sidebar-quote { background: #1b283a; }
+:root[data-theme="dark"] .sidebar-quote::before { background: #1b283a; }
+:root[data-theme="dark"] .sidebar-quote::after { background: #1b283a; }
+:root[data-theme="dark"] .sidebar-quote p { color: #bdcddd; }
+:root[data-theme="dark"] .logout { color: #a8c9f3; background: #1b283a; }
+:root[data-theme="dark"] .logout:hover { background: #1b283a; }
+:root[data-theme="dark"] .main-content { background: #1b283a; }
+:root[data-theme="dark"] .search-box { background: #1b283a; }
+:root[data-theme="dark"] .search-icon { color: #bdcddd; }
+:root[data-theme="dark"] .search-box input { color: #bdcddd; }
+:root[data-theme="dark"] .search-box input::placeholder { color: #bdcddd; }
+:root[data-theme="dark"] .shortcut { color: #bdcddd; }
+:root[data-theme="dark"] .welcome-text h1 span { color: #a8c9f3; }
+:root[data-theme="dark"] .summary-card { background: #1b283a; }
+:root[data-theme="dark"] .summary-icon.green { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .summary-icon.purple { background: #1b283a; color: #a8c9f3; }
+:root[data-theme="dark"] .summary-icon.yellow { background: #1b283a; color: #a8c9f3; }
+:root[data-theme="dark"] .summary-icon.red { background: #1b283a; color: #a8c9f3; }
+:root[data-theme="dark"] .summary-card p { color: #bdcddd; }
+:root[data-theme="dark"] .summary-card h2 { color: #bdcddd; }
+:root[data-theme="dark"] .summary-card span { color: #bdcddd; }
+:root[data-theme="dark"] .section-heading h2 { color: #bdcddd; }
+:root[data-theme="dark"] .section-heading p { color: #bdcddd; }
+:root[data-theme="dark"] .section-heading > a { color: #bdcddd; }
+:root[data-theme="dark"] .project-card { background: #1b283a; }
+:root[data-theme="dark"] .project-icon.blue { background: #1b283a; color: #a8c9f3; }
+:root[data-theme="dark"] .project-icon.green { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .project-icon.teal { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .blue-status { background: #1b283a; color: #a8c9f3; }
+:root[data-theme="dark"] .yellow-status { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .complete-status { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .project-card h3 { color: #bdcddd; }
+:root[data-theme="dark"] .project-card > p { color: #bdcddd; }
+:root[data-theme="dark"] .progress { background: #1b283a; }
+:root[data-theme="dark"] .project-bottom span { color: #bdcddd; }
+:root[data-theme="dark"] .project-bottom button { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .activity-card { background: #1b283a; }
+:root[data-theme="dark"] .activity-list::before { background: #1b283a; }
+:root[data-theme="dark"] .folder { background: #1b283a; color: #a8c9f3; }
+:root[data-theme="dark"] .people { background: #1b283a; color: #a8c9f3; }
+:root[data-theme="dark"] .document { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .edit { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .activity strong { color: #bdcddd; }
+:root[data-theme="dark"] .activity span { color: #bdcddd; }
+:root[data-theme="dark"] .quick-card { background: #1b283a; }
+:root[data-theme="dark"] .blue-icon { background: #1b283a; color: #a8c9f3; }
+:root[data-theme="dark"] .yellow-icon { background: #1b283a; color: #a8c9f3; }
+:root[data-theme="dark"] .green-icon { background: #1b283a; color: #bdcddd; }
+:root[data-theme="dark"] .quick-card h3 { color: #bdcddd; }
+:root[data-theme="dark"] .quick-card p { color: #bdcddd; }
+:root[data-theme="dark"] .footer { color: #bdcddd; }
+:root[data-theme="dark"] .footer-links a:hover { color: #bdcddd; }
+:root[data-theme="dark"] .main-content { background: #101925; }
