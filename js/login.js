@@ -56,6 +56,6 @@ loginForm.addEventListener("submit", function (event) {
     password
   });
 
-  //Redirect to Dashboard
+  //Redirect to Dashboard (same pages/ folder)
   window.location.href = "dashboard.html";
 });

@@ -1,24 +1,4 @@
-/* ============ 1. Colours: edit these to match your project ============ */
-:root {
-  --page: #ffffff;
-  --bg: #f3f4f7;
-  --card: #ffffff;
-  --text: #1c2030;
-  --muted: #5f6778;
-  --line: #e0e3ea;
-  --accent: #3651d4;
-  color-scheme: light;
-}
-:root[data-theme="dark"] {
-  --page: #0d0f14;
-  --bg: #14171e;
-  --card: #1a1e27;
-  --text: #e8eaf0;
-  --muted: #9aa2b2;
-  --line: #272c38;
-  --accent: #93a5ff;
-  color-scheme: dark;
-}
+/* ============ 1. Colours: defined in theme.css — do not redefine here ============ */
 
 /* ============ 2. Base ============ */
 *, *::before, *::after { box-sizing: border-box; }

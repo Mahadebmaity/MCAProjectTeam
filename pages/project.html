@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AgriVision AI - Crop Disease Detection System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF for Direct PDF Downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        agri: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+        }
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #22c55e, transparent);
+            box-shadow: 0 0 15px #22c55e;
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0%; }
+            50% { top: 95%; }
+            100% { top: 0%; }
+        }
+        .heatmap-overlay {
+            background: radial-gradient(circle at 45% 40%, rgba(239, 68, 68, 0.6) 0%, rgba(234, 179, 8, 0.4) 30%, transparent 70%);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(34, 197, 94, 0.12), transparent 50%),
+                        radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.08), transparent 50%);
+        }
+
+        /* Dark Theme Styles */
+        body.theme-dark {
+            background-color: #0b1329 !important;
+            color: #f1f5f9 !important;
+        }
+        body.theme-dark .bg-white, 
+        body.theme-dark .glass-panel {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+        body.theme-dark .bg-slate-50 {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+        }
+        body.theme-dark .text-slate-900,
+        body.theme-dark .text-slate-800,
+        body.theme-dark .text-slate-700 {
+            color: #f8fafc !important;
+        }
+        body.theme-dark .text-slate-600,
+        body.theme-dark .text-slate-500 {
+            color: #cbd5e1 !important;
+        }
+        body.theme-dark .border-slate-200,
+        body.theme-dark .border-slate-300 {
+            border-color: #334155 !important;
+        }
+
+        /* Eye Comfort Warm Sepia Filter Mode */
+        body.theme-comfort {
+            background-color: #f4efe6 !important;
+            color: #2c251e !important;
+        }
+        body.theme-comfort .bg-white,
+        body.theme-comfort .glass-panel {
+            background-color: #e8e0d0 !important;
+            border-color: #d8cdb8 !important;
+            color: #2c251e !important;
+        }
+        body.theme-comfort .bg-slate-50 {
+            background-color: #ede5d5 !important;
+            border-color: #d8cdb8 !important;
+        }
+        body.theme-comfort .text-slate-900,
+        body.theme-comfort .text-slate-800,
+        body.theme-comfort .text-slate-700 {
+            color: #2c251e !important;
+        }
+        body.theme-comfort .text-slate-600,
+        body.theme-comfort .text-slate-500 {
+            color: #594d40 !important;
+        }
+        body.theme-comfort .border-slate-200,
+        body.theme-comfort .border-slate-300 {
+            border-color: #d8cdb8 !important;
+        }
+
+        /* Ensure mobile horizontal scrollbar looks clean */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased hero-gradient">
+
+    <!-- HEADER / NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            
+            <!-- Logo -->
+            <button onclick="navigateTo('landing')" class="flex items-center gap-2 text-left focus:outline-none active:scale-95 transition-transform">
+                <div class="bg-agri-600 text-white w-9 h-9 rounded-xl shadow-md shadow-agri-600/30 flex items-center justify-center">
+                    <i class="fa-solid font-bold fa-leaf text-base"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight leading-none">AgriVision<span class="text-agri-600">AI</span></span>
+                    <span class="text-[9px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">College Project</span>
+                </div>
+            </button>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
+                <button id="nav-landing" onclick="navigateTo('landing')" class="px-3.5 py-2 rounded-lg text-agri-700 bg-agri-50 font-bold transition-all">
+                    <i class="fa-solid fa-house text-xs mr-1.5"></i> Home
+                </button>
+                <button id="nav-detection" onclick="navigateTo('detection')" class="px-3.5 py-2 rounded-lg hover:text-agri-600 hover:bg-slate-100 transition-all">
+                    <i class="fa-solid fa-microscope text-xs mr-1.5 text-agri-600"></i> Detection Tool
+                </button>
+                <button id="nav-study" onclick="navigateTo('study')" class="px-3.5 py-2 rounded-lg hover:text-agri-600 hover:bg-slate-100 transition-all">
+                    <i class="fa-solid fa-graduation-cap text-xs mr-1.5 text-emerald-600"></i> Crop Study Hub
+                </button>
+                <button id="nav-features" onclick="navigateTo('features')" class="px-3.5 py-2 rounded-lg hover:text-agri-600 hover:bg-slate-100 transition-all">
+                    <i class="fa-solid fa-star text-xs mr-1.5 text-amber-500"></i> Features
+                </button>
+                <button id="nav-architecture" onclick="navigateTo('architecture')" class="px-3.5 py-2 rounded-lg hover:text-agri-600 hover:bg-slate-100 transition-all">
+                    <i class="fa-solid fa-sitemap text-xs mr-1.5 text-blue-600"></i> Architecture & Docs
+                </button>
+            </nav>
+
+            <!-- Controls & Mobile Hamburger -->
+            <div class="flex items-center gap-2">
+                <select class="bg-white border border-slate-200 text-slate-700 text-xs rounded-xl px-2.5 py-2 font-semibold outline-none focus:ring-2 focus:ring-agri-500 shadow-sm cursor-pointer">
+                    <option>🌐 EN</option>
+                    <option>🇮🇳 HI (हिंदी)</option>
+                    <option>🇮🇳 BN (বাংলা)</option>
+                </select>
+
+                <!-- Mobile Hamburger Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-xl text-slate-700 bg-white border border-slate-200 shadow-sm hover:bg-slate-50 active:scale-95 transition-all" aria-label="Toggle Navigation Menu">
+                    <i id="mobileMenuIcon" class="fa-solid fa-bars text-base w-5 h-5 flex items-center justify-center"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Slide-Down Drawer Navigation -->
+        <div id="mobileDrawer" class="hidden md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md px-4 py-3 space-y-2 shadow-lg animate-fadeIn">
+            <button onclick="navigateTo('landing'); toggleMobileMenu()" class="w-full text-left px-3.5 py-2.5 rounded-xl font-bold text-slate-700 hover:bg-agri-50 hover:text-agri-700 flex items-center gap-3 text-sm">
+                <i class="fa-solid fa-house w-5 text-agri-600"></i> Home Landing
+            </button>
+            <button onclick="navigateTo('detection'); toggleMobileMenu()" class="w-full text-left px-3.5 py-2.5 rounded-xl font-bold text-slate-700 hover:bg-agri-50 hover:text-agri-700 flex items-center gap-3 text-sm">
+                <i class="fa-solid fa-microscope w-5 text-agri-600"></i> Detection Tool Workspace
+            </button>
+            <button onclick="navigateTo('study'); toggleMobileMenu()" class="w-full text-left px-3.5 py-2.5 rounded-xl font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-3 text-sm">
+                <i class="fa-solid fa-graduation-cap w-5 text-emerald-600"></i> Farmer Crop Study Hub
+            </button>
+            <button onclick="navigateTo('features'); toggleMobileMenu()" class="w-full text-left px-3.5 py-2.5 rounded-xl font-bold text-slate-700 hover:bg-amber-50 hover:text-amber-700 flex items-center gap-3 text-sm">
+                <i class="fa-solid fa-star w-5 text-amber-500"></i> Platform Features & UX
+            </button>
+            <button onclick="navigateTo('architecture'); toggleMobileMenu()" class="w-full text-left px-3.5 py-2.5 rounded-xl font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-3 text-sm">
+                <i class="fa-solid fa-sitemap w-5 text-blue-600"></i> Architecture & Viva Docs
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+        <!-- VIEW 1: LANDING PAGE -->
+        <section id="view-landing" class="space-y-8 sm:space-y-12 py-2 sm:py-4">
+            <!-- Hero Banner -->
+            <div class="text-center max-w-3xl mx-auto space-y-4 sm:space-y-6 pt-2">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-agri-100 text-agri-800 rounded-full text-xs font-extrabold border border-agri-200 shadow-sm">
+                    <i class="fa-solid fa-shield-halved text-agri-600"></i> AI Computer Vision for Agriculture
+                </div>
+                
+                <h1 class="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 leading-tight tracking-tight">
+                    Smart Crop Pathology with <span class="text-agri-600">Truth Research Verification</span>
+                </h1>
+                
+                <p class="text-slate-600 text-sm sm:text-base md:text-lg leading-relaxed font-normal px-2">
+                    Empowering farmers and agricultural extension workers with instant deep learning leaf diagnosis, verified organic & chemical remedies, and scientific research citations.
+                </p>
+
+                <!-- Primary Action CTAs -->
+                <div class="pt-2 sm:pt-4 flex flex-col sm:flex-row justify-center gap-3.5 px-4 sm:px-0">
+                    <button onclick="navigateTo('detection')" class="w-full sm:w-auto bg-agri-600 hover:bg-agri-700 text-white font-black px-6 py-4 rounded-2xl text-base shadow-lg shadow-agri-600/30 active:scale-95 transition-all flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-circle-play text-xl"></i> Launch Detection Tool
+                    </button>
+                    <button onclick="navigateTo('study')" class="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-bold px-6 py-4 rounded-2xl text-base shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-graduation-cap text-emerald-600"></i> Crop Study Hub
+                    </button>
+                    <button onclick="navigateTo('features')" class="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-bold px-6 py-4 rounded-2xl text-base shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-star text-amber-500"></i> Platform Features
+                    </button>
+                </div>
+            </div>
+
+            <!-- Landing Feature Highlights Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 pt-4">
+                <!-- Card 1 -->
+                <div onclick="navigateTo('detection')" class="group bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-agri-500 transition-all cursor-pointer flex flex-col justify-between space-y-4 active:scale-98">
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-2xl bg-agri-100 text-agri-700 flex items-center justify-center text-xl font-bold group-hover:scale-110 group-hover:bg-agri-600 group-hover:text-white transition-all shadow-sm">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base sm:text-lg group-hover:text-agri-700 transition-colors">Instant Leaf Scanning</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Upload or capture a leaf photo. Deep learning neural network detects 38 crop pathogens in under 100 milliseconds.
+                        </p>
+                    </div>
+                    <div class="pt-2 text-xs font-bold text-agri-600 flex items-center gap-1.5 group-hover:translate-x-1.5 transition-transform">
+                        Launch Scanner <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div onclick="navigateTo('study')" class="group bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-emerald-500 transition-all cursor-pointer flex flex-col justify-between space-y-4 active:scale-98">
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-sm">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base sm:text-lg group-hover:text-emerald-700 transition-colors">Farmer Crop Study Hub</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Learn optimal soil types, sowing seasons, irrigation schedules, and disease prevention guides for major crops.
+                        </p>
+                    </div>
+                    <div class="pt-2 text-xs font-bold text-emerald-600 flex items-center gap-1.5 group-hover:translate-x-1.5 transition-transform">
+                        Explore Crop Guides <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div onclick="navigateTo('architecture')" class="group bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-blue-500 transition-all cursor-pointer flex flex-col justify-between space-y-4 sm:col-span-2 lg:col-span-1 active:scale-98">
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl font-bold group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
+                            <i class="fa-solid fa-sitemap"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base sm:text-lg group-hover:text-blue-700 transition-colors">College Architecture & Viva</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            System architecture diagrams, team role matrices, and downloadable PDF documentation for college viva evaluation.
+                        </p>
+                    </div>
+                    <div class="pt-2 text-xs font-bold text-blue-600 flex items-center gap-1.5 group-hover:translate-x-1.5 transition-transform">
+                        View College Guide <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: DETECTION TOOL WORKSPACE -->
+        <section id="view-detection" class="hidden space-y-6 sm:space-y-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900">Crop Leaf Scanner Workspace</h2>
+                    <p class="text-xs text-slate-500">Upload or choose a leaf sample to execute MobileNetV2 disease detection</p>
+                </div>
+                <button onclick="navigateTo('landing')" class="text-xs font-bold text-slate-600 hover:text-slate-800 bg-white border border-slate-200 px-3.5 py-2 rounded-xl shadow-sm hover:bg-slate-50 active:scale-95 transition-all flex items-center gap-1.5 self-end sm:self-auto">
+                    <i class="fa-solid fa-xmark"></i> Exit Workspace
+                </button>
+            </div>
+
+            <!-- Upload Box -->
+            <div id="uploadBox" class="max-w-3xl mx-auto bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-200 space-y-6">
+                <div id="dropZone" class="border-2 border-dashed border-slate-300 hover:border-agri-500 rounded-2xl p-6 sm:p-8 text-center cursor-pointer bg-slate-50 hover:bg-agri-50/40 transition-all group active:scale-98" onclick="document.getElementById('fileInput').click()">
+                    <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-agri-100 text-agri-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform shadow-inner">
+                        <i class="fa-solid fa-cloud-arrow-up text-xl sm:text-2xl"></i>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold text-slate-800">Drag & Drop Crop Leaf Photo Here</h3>
+                    <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Supports PNG, JPG, WEBP up to 10MB</p>
+                    <div class="mt-4 inline-flex items-center gap-2 bg-agri-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md hover:bg-agri-700 transition-colors">
+                        <i class="fa-solid fa-folder-open"></i> Browse Files from Device
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                    <hr class="w-full border-slate-200">
+                    <span class="px-3 font-bold tracking-wider uppercase text-slate-400 text-[10px] sm:text-xs whitespace-nowrap">OR TEST INSTANT SAMPLES</span>
+                    <hr class="w-full border-slate-200">
+                </div>
+
+                <!-- Responsive Sample Preset Cards -->
+                <div>
+                    <label class="block text-xs font-black text-slate-500 uppercase tracking-wider mb-3">
+                        ⚡ Click any pre-loaded crop leaf sample:
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                        <button onclick="analyzeSample('early_blight')" class="group p-2.5 sm:p-3 border border-slate-200 hover:border-agri-500 rounded-2xl bg-white hover:shadow-lg active:scale-95 transition-all text-left focus:outline-none flex flex-col justify-between">
+                            <div class="aspect-square rounded-xl bg-amber-100 overflow-hidden relative mb-2 w-full">
+                                <img src="https://images.unsplash.com/photo-1592417817098-8f3d6eb16431?auto=format&fit=crop&w=300&q=80" alt="Tomato Early Blight" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                                <span class="absolute bottom-1 left-1 bg-black/75 text-white text-[9px] px-1.5 py-0.5 rounded font-bold backdrop-blur-sm">Tomato</span>
+                            </div>
+                            <div class="space-y-0.5">
+                                <p class="text-xs font-black text-slate-800 truncate group-hover:text-agri-600 transition-colors">Early Blight</p>
+                                <p class="text-[9px] text-red-500 font-extrabold flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Fungal
+                                </p>
+                            </div>
+                        </button>
+
+                        <button onclick="analyzeSample('late_blight')" class="group p-2.5 sm:p-3 border border-slate-200 hover:border-agri-500 rounded-2xl bg-white hover:shadow-lg active:scale-95 transition-all text-left focus:outline-none flex flex-col justify-between">
+                            <div class="aspect-square rounded-xl bg-slate-100 overflow-hidden relative mb-2 w-full">
+                                <img src="https://images.unsplash.com/photo-1588613253450-48226066d5b0?auto=format&fit=crop&w=300&q=80" alt="Potato Late Blight" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                                <span class="absolute bottom-1 left-1 bg-black/75 text-white text-[9px] px-1.5 py-0.5 rounded font-bold backdrop-blur-sm">Potato</span>
+                            </div>
+                            <div class="space-y-0.5">
+                                <p class="text-xs font-black text-slate-800 truncate group-hover:text-agri-600 transition-colors">Late Blight</p>
+                                <p class="text-[9px] text-red-500 font-extrabold flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Pathogen
+                                </p>
+                            </div>
+                        </button>
+
+                        <button onclick="analyzeSample('healthy')" class="group p-2.5 sm:p-3 border border-slate-200 hover:border-agri-500 rounded-2xl bg-white hover:shadow-lg active:scale-95 transition-all text-left focus:outline-none flex flex-col justify-between">
+                            <div class="aspect-square rounded-xl bg-emerald-100 overflow-hidden relative mb-2 w-full">
+                                <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=300&q=80" alt="Healthy Foliage" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                                <span class="absolute bottom-1 left-1 bg-black/75 text-white text-[9px] px-1.5 py-0.5 rounded font-bold backdrop-blur-sm">Pepper</span>
+                            </div>
+                            <div class="space-y-0.5">
+                                <p class="text-xs font-black text-slate-800 truncate group-hover:text-agri-600 transition-colors">Healthy Foliage</p>
+                                <p class="text-[9px] text-emerald-600 font-extrabold flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 100% Healthy
+                                </p>
+                            </div>
+                        </button>
+
+                        <button onclick="analyzeSample('rust')" class="group p-2.5 sm:p-3 border border-slate-200 hover:border-agri-500 rounded-2xl bg-white hover:shadow-lg active:scale-95 transition-all text-left focus:outline-none flex flex-col justify-between">
+                            <div class="aspect-square rounded-xl bg-orange-100 overflow-hidden relative mb-2 w-full">
+                                <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=300&q=80" alt="Corn Common Rust" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                                <span class="absolute bottom-1 left-1 bg-black/75 text-white text-[9px] px-1.5 py-0.5 rounded font-bold backdrop-blur-sm">Corn</span>
+                            </div>
+                            <div class="space-y-0.5">
+                                <p class="text-xs font-black text-slate-800 truncate group-hover:text-agri-600 transition-colors">Common Rust</p>
+                                <p class="text-[9px] text-amber-600 font-extrabold flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Rust Spots
+                                </p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pipeline Loading State -->
+            <div id="pipelineBox" class="hidden max-w-2xl mx-auto bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 text-center space-y-6">
+                <div class="relative w-36 h-36 sm:w-48 sm:h-48 mx-auto rounded-2xl overflow-hidden border-4 border-slate-100 shadow-md">
+                    <img id="pipelineImage" src="" alt="Scanning" class="w-full h-full object-cover">
+                    <div class="scan-line"></div>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-800" id="pipelineStatusText">Initializing Deep Learning Model...</h3>
+                    <p class="text-xs text-slate-500">Processing tensor through MobileNetV2 architecture</p>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-4 border-t border-slate-100 text-xs">
+                    <div id="step1" class="p-2 rounded-xl bg-agri-50 text-agri-700 font-bold border border-agri-200 transition-all">
+                        1. Preprocess
+                    </div>
+                    <div id="step2" class="p-2 rounded-xl bg-slate-50 text-slate-400 font-medium transition-all">
+                        2. CNN Feature
+                    </div>
+                    <div id="step3" class="p-2 rounded-xl bg-slate-50 text-slate-400 font-medium transition-all">
+                        3. Inference
+                    </div>
+                    <div id="step4" class="p-2 rounded-xl bg-slate-50 text-slate-400 font-medium transition-all">
+                        4. Remedies
+                    </div>
+                </div>
+            </div>
+
+            <!-- HIGH-IMPACT DIAGNOSTIC RESULTS VIEW -->
+            <div id="resultBox" class="hidden space-y-6 sm:space-y-8">
+                
+                <!-- Main Result Banner & Voice Assistant Header -->
+                <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border border-slate-200 space-y-5">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3.5">
+                            <div id="severityIconBox" class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-xl sm:text-3xl shadow-inner shrink-0">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span id="resultBadge" class="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-red-100 text-red-700 border border-red-200">High Risk Detected</span>
+                                    <span class="text-[10px] text-slate-400 font-mono">ID: #AG-99821</span>
+                                </div>
+                                <h2 id="resultDiseaseTitle" class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">Tomato Early Blight</h2>
+                                <p id="resultCropType" class="text-xs text-slate-500 mt-0.5">Crop Species: <span class="font-bold text-slate-800">Solanum lycopersicum (Tomato)</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Voice Assistant & Confidence Meter -->
+                        <div class="flex items-center gap-3.5 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 pt-3 md:pt-0 border-slate-100">
+                            <!-- Voice Read-out Button -->
+                            <button onclick="speakDiagnosis()" id="voiceBtn" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold px-3.5 py-2.5 rounded-2xl text-xs active:scale-95 transition-all flex items-center gap-2 shadow-sm">
+                                <i id="voiceIcon" class="fa-solid fa-volume-high text-emerald-600 text-sm"></i>
+                                <span id="voiceText">Listen (শুনুন)</span>
+                            </button>
+
+                            <div class="flex items-center gap-3 bg-slate-50 px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl border border-slate-200">
+                                <div class="text-right">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">AI Confidence</p>
+                                    <p id="resultConfidenceText" class="text-xl sm:text-2xl font-black text-agri-600">98.4%</p>
+                                </div>
+                                <div class="w-12 h-12 sm:w-14 sm:h-14 shrink-0">
+                                    <canvas id="confidenceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Weather & Spray Timing Advisory Banner -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-100">
+                        <div class="bg-amber-50/80 p-3 rounded-2xl border border-amber-200/80 flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold shrink-0">
+                                <i class="fa-solid fa-clock text-base"></i>
+                            </div>
+                            <div class="text-xs">
+                                <p class="font-bold text-amber-950">Optimal Spray Time</p>
+                                <p class="text-[11px] text-amber-800">4:30 PM - 6:30 PM Today</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50/80 p-3 rounded-2xl border border-blue-200/80 flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold shrink-0">
+                                <i class="fa-solid fa-cloud-sun text-base"></i>
+                            </div>
+                            <div class="text-xs">
+                                <p class="font-bold text-blue-950">Field Weather Window</p>
+                                <p class="text-[11px] text-blue-800">Low Wind (7km/h) • Humidity 68%</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-emerald-50/80 p-3 rounded-2xl border border-emerald-200/80 flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold shrink-0">
+                                <i class="fa-solid fa-indian-rupee-sign text-base"></i>
+                            </div>
+                            <div class="text-xs">
+                                <p class="font-bold text-emerald-950">Est. Treatment Cost</p>
+                                <p class="text-[11px] text-emerald-800">₹180 - ₹240 / acre (Save ~₹12k)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Diagnosis Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                    
+                    <!-- Left Column: Visual Leaf Diagnosis & Grad-CAM -->
+                    <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-md border border-slate-200 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                                <i class="fa-solid fa-eye text-agri-600"></i> Leaf Visual Scanner
+                            </h3>
+                            <label class="inline-flex items-center cursor-pointer text-xs font-semibold text-slate-600">
+                                <input type="checkbox" id="heatmapToggle" onchange="toggleHeatmap()" class="sr-only peer">
+                                <div class="relative w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-agri-600"></div>
+                                <span class="ms-2 text-[11px] font-bold">Grad-CAM</span>
+                            </label>
+                        </div>
+
+                        <div class="relative rounded-2xl overflow-hidden border border-slate-200 aspect-square bg-slate-100 shadow-inner">
+                            <img id="resultImage" src="" alt="Analyzed Leaf" class="w-full h-full object-cover">
+                            <div id="heatmapLayer" class="absolute inset-0 heatmap-overlay opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+                        </div>
+
+                        <!-- Symptom Breakdown -->
+                        <div class="bg-slate-50 p-3.5 sm:p-4 rounded-2xl text-xs text-slate-600 space-y-2 border border-slate-200">
+                            <p class="font-bold text-slate-800 flex items-center justify-between">
+                                <span>Pathology Symptoms:</span>
+                                <span id="damageText" class="text-[10px] font-extrabold bg-amber-100 text-amber-800 px-2 py-0.5 rounded">~22% Leaf Area</span>
+                            </p>
+                            <ul class="list-disc list-inside space-y-1 text-slate-500 text-[11px] sm:text-xs">
+                                <li>Concentric brown necrotic rings on leaf tissue</li>
+                                <li>Chlorotic yellow halo around early lesion spots</li>
+                                <li>High moisture risk for spreading to adjacent stems</li>
+                            </ul>
+                        </div>
+
+                        <button onclick="resetScanner()" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 active:scale-95">
+                            <i class="fa-solid fa-rotate-left"></i> Scan Another Leaf
+                        </button>
+                    </div>
+
+                    <!-- Right Column: Treatment Tabs, Step-by-Step Farmer Checklist & Truth Links -->
+                    <div class="lg:col-span-2 bg-white rounded-3xl p-5 sm:p-6 shadow-md border border-slate-200 space-y-6">
+                        
+                        <div class="border-b border-slate-200 flex gap-4 text-xs sm:text-sm font-bold overflow-x-auto no-scrollbar">
+                            <button id="tabOrganicBtn" onclick="switchTab('organic')" class="pb-3 border-b-2 border-agri-600 text-agri-700 flex items-center gap-2 whitespace-nowrap">
+                                <i class="fa-solid fa-seedling text-agri-600"></i> Organic Remedies
+                            </button>
+                            <button id="tabChemicalBtn" onclick="switchTab('chemical')" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-600 flex items-center gap-2 whitespace-nowrap">
+                                <i class="fa-solid fa-flask text-amber-600"></i> Chemical Control
+                            </button>
+                            <button id="tabChecklistBtn" onclick="switchTab('checklist')" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-600 flex items-center gap-2 whitespace-nowrap">
+                                <i class="fa-solid fa-list-check text-blue-600"></i> Farmer Action Checklist
+                            </button>
+                        </div>
+
+                        <!-- Organic Tab Content -->
+                        <div id="tabOrganic" class="space-y-4">
+                            <div class="p-4 bg-agri-50 rounded-2xl border border-agri-200 space-y-2">
+                                <h4 class="font-bold text-agri-900 text-xs sm:text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-leaf text-agri-600"></i> Eco-Friendly Bio-Treatment Protocol
+                                </h4>
+                                <p id="organicText" class="text-xs text-slate-700 leading-relaxed">
+                                    Apply neem oil solution (5ml/L) or copper-based bio-fungicide. Prune affected lower leaves and ensure proper soil aeration.
+                                </p>
+                            </div>
+
+                            <!-- Organic Truth Verification Box -->
+                            <div class="p-3.5 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                                    <span class="font-black text-slate-800 uppercase tracking-wider text-[9px] sm:text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded w-max">
+                                        <i class="fa-solid fa-circle-check mr-1"></i> Scientific Truth Verification
+                                    </span>
+                                    <span class="text-[10px] text-slate-400">ICAR & FAO Peer-Reviewed</span>
+                                </div>
+                                <p class="text-slate-600 text-[11px] sm:text-xs leading-relaxed">
+                                    This organic protocol is verified against standard agricultural research papers. Verify efficacy and research truth:
+                                </p>
+                                <div class="flex flex-wrap gap-2 pt-1">
+                                    <a href="https://icar.org.in/" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-700 font-bold hover:text-agri-600 transition-colors text-[11px]">
+                                        <i class="fa-solid fa-book text-agri-600"></i> ICAR Bio-Pesticide Bulletin
+                                    </a>
+                                    <a href="https://www.fao.org/" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-700 font-bold hover:text-agri-600 transition-colors text-[11px]">
+                                        <i class="fa-solid fa-globe text-blue-600"></i> FAO Bio-Control Guide
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chemical Tab Content -->
+                        <div id="tabChemical" class="hidden space-y-4">
+                            <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 space-y-2">
+                                <h4 class="font-bold text-amber-900 text-xs sm:text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-600"></i> Recommended Fungicide & Dosage Safety
+                                </h4>
+                                <p id="chemicalText" class="text-xs text-slate-700 leading-relaxed">
+                                    Mancozeb 75% WP @ 2g/L or Chlorothalonil 75% WP @ 2g/L at early onset. Spray twice with a 10-day interval.
+                                </p>
+                            </div>
+
+                            <!-- Chemical Truth Verification Box -->
+                            <div class="p-3.5 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                                    <span class="font-black text-slate-800 uppercase tracking-wider text-[9px] sm:text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded w-max">
+                                        <i class="fa-solid fa-shield text-amber-600 mr-1"></i> Safety & Regulatory Verification
+                                    </span>
+                                    <span class="text-[10px] text-slate-400">CIBRC Govt Registry</span>
+                                </div>
+                                <p class="text-slate-600 text-[11px] sm:text-xs leading-relaxed">
+                                    Verify chemical dosage safety compliance with Central Insecticides Board & Registration Committee (CIBRC) standards:
+                                </p>
+                                <div class="flex flex-wrap gap-2 pt-1">
+                                    <a href="http://ppqs.gov.in/" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-700 font-bold hover:text-amber-600 transition-colors text-[11px]">
+                                        <i class="fa-solid fa-building-columns text-amber-600"></i> CIBRC Government Registry
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NEW: Farmer Step-by-Step Action Checklist Tab -->
+                        <div id="tabChecklist" class="hidden space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-2xl border border-blue-200 space-y-3">
+                                <h4 class="font-bold text-blue-900 text-xs sm:text-sm flex items-center justify-between">
+                                    <span><i class="fa-solid fa-list-check text-blue-600 mr-1.5"></i> Farmer Immediate Field Action Plan</span>
+                                    <span class="text-[10px] bg-blue-200 text-blue-800 font-extrabold px-2 py-0.5 rounded">4-Step Procedure</span>
+                                </h4>
+                                
+                                <div class="space-y-2 text-xs text-slate-700">
+                                    <label class="flex items-start gap-2.5 bg-white p-2.5 rounded-xl border border-blue-100 cursor-pointer hover:bg-blue-50/50 transition-colors">
+                                        <input type="checkbox" class="mt-0.5 accent-agri-600 w-4 h-4 rounded">
+                                        <span><strong>Step 1:</strong> Prune and safely burn or bury heavily infected lower leaf foliage.</span>
+                                    </label>
+                                    <label class="flex items-start gap-2.5 bg-white p-2.5 rounded-xl border border-blue-100 cursor-pointer hover:bg-blue-50/50 transition-colors">
+                                        <input type="checkbox" class="mt-0.5 accent-agri-600 w-4 h-4 rounded">
+                                        <span><strong>Step 2:</strong> Avoid evening sprinkler irrigation to keep leaf surfaces dry overnight.</span>
+                                    </label>
+                                    <label class="flex items-start gap-2.5 bg-white p-2.5 rounded-xl border border-blue-100 cursor-pointer hover:bg-blue-50/50 transition-colors">
+                                        <input type="checkbox" class="mt-0.5 accent-agri-600 w-4 h-4 rounded">
+                                        <span><strong>Step 3:</strong> Apply recommended bio-spray during low wind velocity window (late afternoon).</span>
+                                    </label>
+                                    <label class="flex items-start gap-2.5 bg-white p-2.5 rounded-xl border border-blue-100 cursor-pointer hover:bg-blue-50/50 transition-colors">
+                                        <input type="checkbox" class="mt-0.5 accent-agri-600 w-4 h-4 rounded">
+                                        <span><strong>Step 4:</strong> Re-scan leaf sample in 7 days to evaluate disease regression.</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PDF Download & Krishi Helpline Action Buttons -->
+                        <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <button onclick="downloadDiagnosticPDF()" class="w-full sm:w-auto bg-agri-600 hover:bg-agri-700 text-white font-bold px-5 py-3 rounded-xl text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-file-pdf text-sm"></i> Download Official PDF Report
+                            </button>
+
+                            <a href="tel:18001801551" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold px-4 py-3 rounded-xl text-xs active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-phone text-agri-600"></i> Call Kisan Advisory (1800-180-1551)
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: PLATFORM FEATURES -->
+        <section id="view-features" class="hidden space-y-6 sm:space-y-8">
+            <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
+                <span class="text-[10px] sm:text-xs font-extrabold text-amber-800 bg-amber-100 px-3 py-1 rounded-full uppercase tracking-wider">System Capabilities</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Platform Features & UX Innovations</h2>
+                <p class="text-xs sm:text-sm text-slate-500 px-2">Designed with modern user experience standards for farmers, students, and agricultural researchers</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <!-- Feature 1 -->
+                <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-lg transition-all space-y-3 flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                        <div class="w-10 h-10 rounded-2xl bg-agri-100 text-agri-700 flex items-center justify-center font-bold text-base shadow-inner">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Deep Neural Diagnostics</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Powered by MobileNetV2 architecture trained on 54,000+ plant leaf images, recognizing 38 distinct crop pathogen classes with >98% accuracy.
+                        </p>
+                    </div>
+                    <span class="text-[10px] font-bold text-agri-700 uppercase tracking-wider bg-agri-50 px-2.5 py-1 rounded-lg w-max border border-agri-200">TensorFlow Core</span>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-lg transition-all space-y-3 flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                        <div class="w-10 h-10 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center font-bold text-base shadow-inner">
+                            <i class="fa-solid fa-eye"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Grad-CAM Heatmap</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Visualizes exact leaf lesion areas that influenced AI prediction, ensuring transparent and trustworthy computer vision results.
+                        </p>
+                    </div>
+                    <span class="text-[10px] font-bold text-red-700 uppercase tracking-wider bg-red-50 px-2.5 py-1 rounded-lg w-max border border-red-200">Explainable AI</span>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-lg transition-all space-y-3 flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-base shadow-inner">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Truth Research Links</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Direct scientific paper and ICAR research bulletin citations embedded in both Organic and Chemical treatment recommendations.
+                        </p>
+                    </div>
+                    <span class="text-[10px] font-bold text-blue-700 uppercase tracking-wider bg-blue-50 px-2.5 py-1 rounded-lg w-max border border-blue-200">ICAR & FAO Verified</span>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-lg transition-all space-y-3 flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base shadow-inner">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Instant PDF Report</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Generates downloadable diagnostic summaries containing crop species, confidence gauges, treatment protocols, and safety notes.
+                        </p>
+                    </div>
+                    <span class="text-[10px] font-bold text-amber-700 uppercase tracking-wider bg-amber-50 px-2.5 py-1 rounded-lg w-max border border-amber-200">jsPDF Engine</span>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-lg transition-all space-y-3 flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                        <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-base shadow-inner">
+                            <i class="fa-solid fa-mobile-screen"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Mobile Responsive UX</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Progressive mobile layout with high-contrast touch targets designed specifically for outdoor smartphone use by farmers.
+                        </p>
+                    </div>
+                    <span class="text-[10px] font-bold text-purple-700 uppercase tracking-wider bg-purple-50 px-2.5 py-1 rounded-lg w-max border border-purple-200">Mobile First</span>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-lg transition-all space-y-3 flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base shadow-inner">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Eye Comfort Filter</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Includes Light, Dark, and Eye Comfort modes that filter blue light, reducing eye strain during long field inspections.
+                        </p>
+                    </div>
+                    <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-lg w-max border border-emerald-200">Warm Sepia Mode</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 4: SYSTEM ARCHITECTURE & DOCS -->
+        <section id="view-architecture" class="hidden space-y-6 sm:space-y-8">
+            <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
+                <span class="text-[10px] sm:text-xs font-extrabold text-blue-800 bg-blue-100 px-3 py-1 rounded-full uppercase tracking-wider">College Project Documentation</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900">System Architecture & Technical Viva Guide</h2>
+                <p class="text-xs sm:text-sm text-slate-500 px-2">Comprehensive blueprint for project review, faculty viva presentation, and team role distribution</p>
+            </div>
+
+            <!-- Download Architecture PDF Banner -->
+            <div class="bg-slate-900 text-white p-5 sm:p-7 rounded-3xl shadow-lg border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <h3 class="font-bold text-sm sm:text-base">Need downloadable documentation for your professor?</h3>
+                    <p class="text-xs text-slate-400">Download the complete technical blueprint PDF with data flows, CNN metrics, and viva Q&A.</p>
+                </div>
+                <button onclick="downloadArchitecturePDF()" class="w-full sm:w-auto bg-agri-500 hover:bg-agri-400 text-slate-950 font-black px-5 py-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-md active:scale-95">
+                    <i class="fa-solid fa-file-pdf text-sm"></i> Download Architecture PDF
+                </button>
+            </div>
+
+            <!-- Architecture Options -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Option A -->
+                <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-agri-100 text-agri-800 text-[10px] font-black uppercase px-2.5 py-1 rounded-full">Option A</span>
+                            <span class="text-xs text-slate-400 font-bold">Beginner Friendly</span>
+                        </div>
+                        <h3 class="font-black text-slate-900 text-base sm:text-lg">Monolithic Web Architecture</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Single API server (FastAPI/Flask) hosting both web routes and TensorFlow ML model inference. Ideal for college rapid prototyping.
+                        </p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-2xl text-[11px] font-mono text-slate-700 border border-slate-200 overflow-x-auto no-scrollbar whitespace-nowrap">
+                        React UI ➔ FastAPI Endpoint ➔ TensorFlow ➔ JSON
+                    </div>
+                </div>
+
+                <!-- Option B -->
+                <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-blue-100 text-blue-800 text-[10px] font-black uppercase px-2.5 py-1 rounded-full">Option B</span>
+                            <span class="text-xs text-slate-400 font-bold">Scalable Microservices</span>
+                        </div>
+                        <h3 class="font-black text-slate-900 text-base sm:text-lg">Decoupled & Edge-Ready Architecture</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Separates API gateway from asynchronous inference services (TensorFlow Serving / ONNX). Supports offline browser-side TFLite execution.
+                        </p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-2xl text-[11px] font-mono text-slate-700 border border-slate-200 overflow-x-auto no-scrollbar whitespace-nowrap">
+                        PWA UI ➔ API Gateway ➔ TF Serving / TFLite ➔ DB
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Viva Q&A Accordion -->
+            <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-md space-y-4">
+                <h3 class="font-black text-slate-900 text-base sm:text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-question text-blue-600"></i> Essential Technical Viva Q&A
+                </h3>
+
+                <div class="space-y-3 text-xs">
+                    <div class="p-3.5 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-slate-800">Q1: Which dataset was used, and how is overfitting prevented?</p>
+                        <p class="text-slate-600 leading-relaxed text-[11px] sm:text-xs">A: PlantVillage dataset (~54,000 images, 38 classes). Overfitting is mitigated via Data Augmentation (rotation, scaling, color jitter), Dropout layers (0.3), and Early Stopping during training.</p>
+                    </div>
+
+                    <div class="p-3.5 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-slate-800">Q2: Why choose MobileNetV2 over standard CNN from scratch?</p>
+                        <p class="text-slate-600 leading-relaxed text-[11px] sm:text-xs">A: MobileNetV2 utilizes depthwise separable convolutions, reducing model parameters by ~80% while retaining high ImageNet feature representations, resulting in sub-100ms inference on CPU.</p>
+                    </div>
+
+                    <div class="p-3.5 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+                        <p class="font-bold text-slate-800">Q3: How are invalid or non-leaf images filtered?</p>
+                        <p class="text-slate-600 leading-relaxed text-[11px] sm:text-xs">A: Output softmax confidence scores below a designated threshold (e.g., &lt;60%) trigger an out-of-distribution warning prompting the user to upload a clearer leaf photo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 5: CROP STUDY HUB -->
+        <section id="view-study" class="hidden space-y-6 sm:space-y-8">
+            <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
+                <span class="text-[10px] sm:text-xs font-extrabold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full uppercase tracking-wider">Agronomy Knowledge Base</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Farmer Crop Cultivation Academy</h2>
+                <p class="text-xs sm:text-sm text-slate-500 px-2">Essential agricultural guide for soil types, optimal sowing seasons, water requirements, and disease prevention</p>
+            </div>
+
+            <!-- Crop Category Filter Buttons (Horizontal Touch Scroll on Mobile) -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar justify-start sm:justify-center">
+                <button onclick="filterCrops('all')" id="crop-filter-all" class="px-4 py-2 rounded-xl text-xs font-bold bg-agri-600 text-white shadow-sm transition-all whitespace-nowrap shrink-0 active:scale-95">All Crops</button>
+                <button onclick="filterCrops('cereal')" id="crop-filter-cereal" class="px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all whitespace-nowrap shrink-0 active:scale-95">Cereals & Grains</button>
+                <button onclick="filterCrops('vegetable')" id="crop-filter-vegetable" class="px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all whitespace-nowrap shrink-0 active:scale-95">Vegetables</button>
+                <button onclick="filterCrops('cash')" id="crop-filter-cash" class="px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all whitespace-nowrap shrink-0 active:scale-95">Cash Crops</button>
+            </div>
+
+            <!-- Crop Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                
+                <!-- Paddy / Rice -->
+                <div class="crop-card cereal bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <div class="relative h-40 sm:h-44 w-full overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1536657464919-892534f60d6e?auto=format&fit=crop&w=600&q=80" alt="Paddy Rice Crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/166534/ffffff?text=Paddy+Rice+Crop';">
+                        <div class="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full border border-white/20">Cereal Crop</div>
+                        <div class="absolute bottom-2 right-2 text-[10px] text-white font-mono italic bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm">Oryza sativa</div>
+                    </div>
+                    <div class="p-5 sm:p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div>
+                                <h3 class="font-black text-slate-900 text-base sm:text-lg group-hover:text-agri-600 transition-colors">Paddy / Rice</h3>
+                                <p class="text-xs text-slate-500 font-medium">Kharif Season (June – Nov)</p>
+                            </div>
+                            <div class="space-y-1.5 text-xs text-slate-600 pt-3 border-t border-slate-100">
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-mountain-sun text-amber-600"></i> Soil:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">Clayey Loam</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-droplet text-blue-500"></i> Water:</span>
+                                    <span class="text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">High (Standing)</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-temperature-half text-red-500"></i> Temp:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">20°C - 35°C</span>
+                                </div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-2xl text-[11px] sm:text-xs space-y-0.5 border border-slate-100">
+                                <p class="font-bold text-slate-800 flex items-center gap-1"><i class="fa-solid fa-shield-virus text-agri-600"></i> Pathology:</p>
+                                <p class="text-slate-500 leading-relaxed">Paddy Blast, Bacterial Leaf Blight, Sheath Blight.</p>
+                            </div>
+                        </div>
+                        <a href="https://icar.org.in/" target="_blank" rel="noopener" class="block text-center py-2.5 bg-agri-50 hover:bg-agri-100 text-agri-700 font-bold text-xs rounded-xl transition-colors border border-agri-200">
+                            ICAR Manual <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tomato -->
+                <div class="crop-card vegetable bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <div class="relative h-40 sm:h-44 w-full overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1592417817098-8f3d6eb16431?auto=format&fit=crop&w=600&q=80" alt="Tomato Crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/991b1b/ffffff?text=Tomato+Crop';">
+                        <div class="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full border border-white/20">Vegetable</div>
+                        <div class="absolute bottom-2 right-2 text-[10px] text-white font-mono italic bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm">Solanum lycopersicum</div>
+                    </div>
+                    <div class="p-5 sm:p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div>
+                                <h3 class="font-black text-slate-900 text-base sm:text-lg group-hover:text-agri-600 transition-colors">Tomato</h3>
+                                <p class="text-xs text-slate-500 font-medium">Rabi & Kharif Seasons</p>
+                            </div>
+                            <div class="space-y-1.5 text-xs text-slate-600 pt-3 border-t border-slate-100">
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-mountain-sun text-amber-600"></i> Soil:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">Sandy Loam</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-droplet text-blue-500"></i> Water:</span>
+                                    <span class="text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">Moderate Drip</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-temperature-half text-red-500"></i> Temp:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">18°C - 27°C</span>
+                                </div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-2xl text-[11px] sm:text-xs space-y-0.5 border border-slate-100">
+                                <p class="font-bold text-slate-800 flex items-center gap-1"><i class="fa-solid fa-shield-virus text-agri-600"></i> Pathology:</p>
+                                <p class="text-slate-500 leading-relaxed">Early Blight, Late Blight, Leaf Curl.</p>
+                            </div>
+                        </div>
+                        <a href="https://icar.org.in/" target="_blank" rel="noopener" class="block text-center py-2.5 bg-agri-50 hover:bg-agri-100 text-agri-700 font-bold text-xs rounded-xl transition-colors border border-agri-200">
+                            ICAR Manual <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Wheat -->
+                <div class="crop-card cereal bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <div class="relative h-40 sm:h-44 w-full overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80" alt="Wheat Crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/92400e/ffffff?text=Wheat+Crop';">
+                        <div class="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full border border-white/20">Cereal Crop</div>
+                        <div class="absolute bottom-2 right-2 text-[10px] text-white font-mono italic bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm">Triticum aestivum</div>
+                    </div>
+                    <div class="p-5 sm:p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div>
+                                <h3 class="font-black text-slate-900 text-base sm:text-lg group-hover:text-agri-600 transition-colors">Wheat</h3>
+                                <p class="text-xs text-slate-500 font-medium">Rabi Season (Nov – April)</p>
+                            </div>
+                            <div class="space-y-1.5 text-xs text-slate-600 pt-3 border-t border-slate-100">
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-mountain-sun text-amber-600"></i> Soil:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">Clay Loam</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-droplet text-blue-500"></i> Water:</span>
+                                    <span class="text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">4-6 Cycles</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-temperature-half text-red-500"></i> Temp:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">15°C - 25°C</span>
+                                </div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-2xl text-[11px] sm:text-xs space-y-0.5 border border-slate-100">
+                                <p class="font-bold text-slate-800 flex items-center gap-1"><i class="fa-solid fa-shield-virus text-agri-600"></i> Pathology:</p>
+                                <p class="text-slate-500 leading-relaxed">Yellow Rust, Brown Rust, Loose Smut.</p>
+                            </div>
+                        </div>
+                        <a href="https://icar.org.in/" target="_blank" rel="noopener" class="block text-center py-2.5 bg-agri-50 hover:bg-agri-100 text-agri-700 font-bold text-xs rounded-xl transition-colors border border-agri-200">
+                            ICAR Manual <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Potato -->
+                <div class="crop-card vegetable bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <div class="relative h-40 sm:h-44 w-full overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80" alt="Potato Crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/78350f/ffffff?text=Potato+Crop';">
+                        <div class="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full border border-white/20">Vegetable</div>
+                        <div class="absolute bottom-2 right-2 text-[10px] text-white font-mono italic bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm">Solanum tuberosum</div>
+                    </div>
+                    <div class="p-5 sm:p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div>
+                                <h3 class="font-black text-slate-900 text-base sm:text-lg group-hover:text-agri-600 transition-colors">Potato</h3>
+                                <p class="text-xs text-slate-500 font-medium">Winter Season (Oct – Feb)</p>
+                            </div>
+                            <div class="space-y-1.5 text-xs text-slate-600 pt-3 border-t border-slate-100">
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-mountain-sun text-amber-600"></i> Soil:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">Friable Loam</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-droplet text-blue-500"></i> Water:</span>
+                                    <span class="text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">Regular Light</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-temperature-half text-red-500"></i> Temp:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">15°C - 20°C</span>
+                                </div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-2xl text-[11px] sm:text-xs space-y-0.5 border border-slate-100">
+                                <p class="font-bold text-slate-800 flex items-center gap-1"><i class="fa-solid fa-shield-virus text-agri-600"></i> Pathology:</p>
+                                <p class="text-slate-500 leading-relaxed">Late Blight, Early Blight.</p>
+                            </div>
+                        </div>
+                        <a href="https://icar.org.in/" target="_blank" rel="noopener" class="block text-center py-2.5 bg-agri-50 hover:bg-agri-100 text-agri-700 font-bold text-xs rounded-xl transition-colors border border-agri-200">
+                            ICAR Manual <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Corn / Maize -->
+                <div class="crop-card cereal bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <div class="relative h-40 sm:h-44 w-full overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=600&q=80" alt="Maize Corn Crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/ca8a04/ffffff?text=Maize+Corn+Crop';">
+                        <div class="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full border border-white/20">Cereal Crop</div>
+                        <div class="absolute bottom-2 right-2 text-[10px] text-white font-mono italic bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm">Zea mays</div>
+                    </div>
+                    <div class="p-5 sm:p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div>
+                                <h3 class="font-black text-slate-900 text-base sm:text-lg group-hover:text-agri-600 transition-colors">Maize / Corn</h3>
+                                <p class="text-xs text-slate-500 font-medium">Kharif & Spring</p>
+                            </div>
+                            <div class="space-y-1.5 text-xs text-slate-600 pt-3 border-t border-slate-100">
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-mountain-sun text-amber-600"></i> Soil:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">Well-drained</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-droplet text-blue-500"></i> Water:</span>
+                                    <span class="text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">Moderate</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-temperature-half text-red-500"></i> Temp:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">21°C - 30°C</span>
+                                </div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-2xl text-[11px] sm:text-xs space-y-0.5 border border-slate-100">
+                                <p class="font-bold text-slate-800 flex items-center gap-1"><i class="fa-solid fa-shield-virus text-agri-600"></i> Pathology:</p>
+                                <p class="text-slate-500 leading-relaxed">Common Rust, Turcicum Blight.</p>
+                            </div>
+                        </div>
+                        <a href="https://icar.org.in/" target="_blank" rel="noopener" class="block text-center py-2.5 bg-agri-50 hover:bg-agri-100 text-agri-700 font-bold text-xs rounded-xl transition-colors border border-agri-200">
+                            ICAR Manual <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Sugarcane -->
+                <div class="crop-card cash bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <div class="relative h-40 sm:h-44 w-full overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1600298882283-40b4dcb8b211?auto=format&fit=crop&w=600&q=80" alt="Sugarcane Crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/581c87/ffffff?text=Sugarcane+Crop';">
+                        <div class="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full border border-white/20">Cash Crop</div>
+                        <div class="absolute bottom-2 right-2 text-[10px] text-white font-mono italic bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm">Saccharum officinarum</div>
+                    </div>
+                    <div class="p-5 sm:p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div>
+                                <h3 class="font-black text-slate-900 text-base sm:text-lg group-hover:text-agri-600 transition-colors">Sugarcane</h3>
+                                <p class="text-xs text-slate-500 font-medium">Annual Crop (10-12 months)</p>
+                            </div>
+                            <div class="space-y-1.5 text-xs text-slate-600 pt-3 border-t border-slate-100">
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-mountain-sun text-amber-600"></i> Soil:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">Alluvial Loam</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-droplet text-blue-500"></i> Water:</span>
+                                    <span class="text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">High (1500mm)</span>
+                                </div>
+                                <div class="flex justify-between items-center py-0.5">
+                                    <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-temperature-half text-red-500"></i> Temp:</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] sm:text-[11px]">20°C - 38°C</span>
+                                </div>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-2xl text-[11px] sm:text-xs space-y-0.5 border border-slate-100">
+                                <p class="font-bold text-slate-800 flex items-center gap-1"><i class="fa-solid fa-shield-virus text-agri-600"></i> Pathology:</p>
+                                <p class="text-slate-500 leading-relaxed">Red Rot, Smut, Aphid infestation.</p>
+                            </div>
+                        </div>
+                        <a href="https://icar.org.in/" target="_blank" rel="noopener" class="block text-center py-2.5 bg-agri-50 hover:bg-agri-100 text-agri-700 font-bold text-xs rounded-xl transition-colors border border-agri-200">
+                            ICAR Manual <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER (EXCLUSIVELY SHOWN ON LANDING PAGE VIEW) -->
+    <footer id="app-footer" class="bg-slate-900 text-slate-300 border-t border-slate-800 pt-10 sm:pt-12 pb-8 mt-12 sm:mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
+            <!-- Footer Columns -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pt-2">
+                <!-- Col 1: Brand & Theme Mode Switcher -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2.5">
+                        <div class="bg-agri-600 text-white p-2 rounded-xl shadow-md flex items-center justify-center">
+                            <i class="fa-solid fa-leaf text-base"></i>
+                        </div>
+                        <span class="text-xl font-extrabold text-white tracking-tight">AgriVision<span class="text-agri-500">AI</span></span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        An AI-driven crop pathology platform built for college project demonstration. Combines deep learning with ground-level truth verification.
+                    </p>
+
+                    <!-- Theme Toggles -->
+                    <div class="pt-1 space-y-2">
+                        <p class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-palette text-agri-400"></i> Theme Mode:
+                        </p>
+                        <div class="flex flex-wrap items-center gap-2" id="themeButtons">
+                            <button onclick="setTheme('light')" id="btn-theme-light" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 bg-agri-600 text-white border border-agri-500 shadow-sm active:scale-95">
+                                <i class="fa-solid fa-sun text-amber-300"></i> Light
+                            </button>
+                            <button onclick="setTheme('dark')" id="btn-theme-dark" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 bg-slate-800 text-slate-300 hover:text-white border border-slate-700 active:scale-95">
+                                <i class="fa-solid fa-moon text-blue-300"></i> Dark
+                            </button>
+                            <button onclick="setTheme('comfort')" id="btn-theme-comfort" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 bg-amber-950/60 text-amber-200 hover:text-amber-100 border border-amber-800/60 active:scale-95">
+                                <i class="fa-solid fa-eye text-amber-400"></i> Comfort
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Col 2: Navigation Links -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider">System Navigation</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <button onclick="navigateTo('landing')" class="hover:text-agri-400 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-angle-right text-[10px] text-agri-500"></i> Home Landing
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="navigateTo('detection')" class="hover:text-agri-400 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-angle-right text-[10px] text-agri-500"></i> Detection Workspace
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="navigateTo('study')" class="hover:text-agri-400 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-angle-right text-[10px] text-agri-500"></i> Farmer Crop Study Hub
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="navigateTo('features')" class="hover:text-agri-400 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-angle-right text-[10px] text-agri-500"></i> Platform Features & UX
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="navigateTo('architecture')" class="hover:text-agri-400 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-angle-right text-[10px] text-agri-500"></i> Architecture & Viva Guide
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Truth Research Links -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider">Truth Verification</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <a href="https://icar.org.in/" target="_blank" rel="noopener noreferrer" class="hover:text-agri-400 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-agri-500"></i> ICAR Research Bulletins
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://ppqs.gov.in/" target="_blank" rel="noopener noreferrer" class="hover:text-agri-400 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-agri-500"></i> CIBRC Pesticide Safety Registry
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.fao.org/" target="_blank" rel="noopener noreferrer" class="hover:text-agri-400 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-agri-500"></i> FAO Bio-Pesticide Standards
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://plantvillage.psu.edu/" target="_blank" rel="noopener noreferrer" class="hover:text-agri-400 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-database text-[10px] text-agri-500"></i> PlantVillage Open Dataset
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Project Info -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider">Project Team & Support</h4>
+                    <div class="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700 space-y-2 text-xs">
+                        <div class="flex items-center justify-between text-slate-300">
+                            <span class="font-bold text-white"><i class="fa-solid fa-users text-agri-400 mr-1"></i> Team Size:</span>
+                            <span class="bg-slate-700 px-2 py-0.5 rounded text-[10px] font-mono text-agri-300">4 Members</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400">
+                            <strong>Role:</strong> Project Lead & Full-Stack Integration
+                        </p>
+                        <div class="pt-2 border-t border-slate-700/80 flex items-center gap-2 text-agri-400 font-bold">
+                            <i class="fa-solid fa-headset text-sm"></i>
+                            <span>Kisan Helpline: 1800-180-1551</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 text-center sm:text-left">
+                <p>© 2026 AgriVision AI Project Team. College Evaluation Prototype.</p>
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hover:text-agri-400 transition-colors flex items-center gap-1 font-bold">
+                    Back to top <i class="fa-solid fa-arrow-up text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentActiveData = {
+            title: 'Tomato Early Blight',
+            crop: 'Solanum lycopersicum (Tomato)',
+            confidence: '98.4%',
+            confidenceVal: 98.4,
+            organic: 'Apply neem oil solution (5ml/L) or copper-based bio-fungicide. Prune affected lower leaves and ensure proper soil aeration.',
+            chemical: 'Mancozeb 75% WP @ 2g/L or Chlorothalonil 75% WP @ 2g/L at early onset.',
+            image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb16431?auto=format&fit=crop&w=600&q=80'
+        };
+        let currentChart = null;
+        let isSpeaking = false;
+
+        const sampleData = {
+            early_blight: {
+                title: 'Tomato Early Blight',
+                crop: 'Solanum lycopersicum (Tomato)',
+                confidence: '98.4%',
+                confidenceVal: 98.4,
+                organic: 'Apply neem oil solution (5ml/L) or copper-based bio-fungicide. Prune affected lower leaves and ensure proper soil aeration.',
+                chemical: 'Mancozeb 75% WP @ 2g/L or Chlorothalonil 75% WP @ 2g/L at early onset.',
+                image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb16431?auto=format&fit=crop&w=600&q=80'
+            },
+            late_blight: {
+                title: 'Potato Late Blight',
+                crop: 'Solanum tuberosum (Potato)',
+                confidence: '96.1%',
+                confidenceVal: 96.1,
+                organic: 'Use bio-fungicide Trichoderma viride and remove infected plant debris immediately.',
+                chemical: 'Cymoxanil + Mancozeb (1.5g/L) or Metalaxyl 8% + Mancozeb 64% WP.',
+                image: 'https://images.unsplash.com/photo-1588613253450-48226066d5b0?auto=format&fit=crop&w=600&q=80'
+            },
+            healthy: {
+                title: 'Healthy Bell Pepper Leaf',
+                crop: 'Capsicum annuum (Pepper)',
+                confidence: '99.2%',
+                confidenceVal: 99.2,
+                organic: 'Leaf shows no signs of active disease. Maintain regular organic compost and adequate watering.',
+                chemical: 'No chemical treatment required. Preventive neem oil spray can be applied monthly.',
+                image: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=600&q=80'
+            },
+            rust: {
+                title: 'Corn Common Rust',
+                crop: 'Zea mays (Corn)',
+                confidence: '94.7%',
+                confidenceVal: 94.7,
+                organic: 'Plant resistant corn hybrids, practice crop rotation, and apply sulfur-based bio-dust.',
+                chemical: 'Propiconazole 25% EC @ 1ml/L or Azoxystrobin 23% SC.',
+                image: 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=600&q=80'
+            }
+        };
+
+        function toggleMobileMenu() {
+            const drawer = document.getElementById('mobileDrawer');
+            const icon = document.getElementById('mobileMenuIcon');
+            if (drawer && icon) {
+                const isHidden = drawer.classList.contains('hidden');
+                if (isHidden) {
+                    drawer.classList.remove('hidden');
+                    icon.className = "fa-solid fa-xmark text-base w-5 h-5 flex items-center justify-center";
+                } else {
+                    drawer.classList.add('hidden');
+                    icon.className = "fa-solid fa-bars text-base w-5 h-5 flex items-center justify-center";
+                }
+            }
+        }
+
+        function navigateTo(viewName) {
+            const views = ['landing', 'detection', 'features', 'architecture', 'study'];
+            
+            views.forEach(v => {
+                const viewEl = document.getElementById(`view-${v}`);
+                if (viewEl) viewEl.classList.add('hidden');
+
+                const btnEl = document.getElementById(`nav-${v}`);
+                if (btnEl) btnEl.className = "px-3.5 py-2 rounded-lg hover:text-agri-600 hover:bg-slate-100 transition-all";
+            });
+
+            const targetView = document.getElementById(`view-${viewName}`);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                const targetBtn = document.getElementById(`nav-${viewName}`);
+                if (targetBtn) {
+                    targetBtn.className = "px-3.5 py-2 rounded-lg text-agri-700 bg-agri-50 font-bold transition-all";
+                }
+            }
+
+            // Show footer ONLY on landing page view
+            const appFooter = document.getElementById('app-footer');
+            if (appFooter) {
+                if (viewName === 'landing') {
+                    appFooter.classList.remove('hidden');
+                } else {
+                    appFooter.classList.add('hidden');
+                }
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterCrops(category) {
+            const cards = document.querySelectorAll('.crop-card');
+            const btns = ['all', 'cereal', 'vegetable', 'cash'];
+
+            btns.forEach(b => {
+                const btnEl = document.getElementById(`crop-filter-${b}`);
+                if (btnEl) {
+                    if (b === category) {
+                        btnEl.className = "px-4 py-2 rounded-xl text-xs font-bold bg-agri-600 text-white shadow-sm transition-all whitespace-nowrap shrink-0 active:scale-95";
+                    } else {
+                        btnEl.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all whitespace-nowrap shrink-0 active:scale-95";
+                    }
+                }
+            });
+
+            cards.forEach(card => {
+                if (category === 'all' || card.classList.contains(category)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const customObj = {
+                        title: 'Custom Leaf Upload Analysis',
+                        crop: 'Uploaded Crop Sample',
+                        confidence: '95.2%',
+                        confidenceVal: 95.2,
+                        organic: 'Inspect leaf margins and apply preventive bio-fungicide spray if lesions spread.',
+                        chemical: 'Broad-spectrum protective copper oxychloride spray.',
+                        image: e.target.result
+                    };
+                    runScannerPipeline(customObj);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function analyzeSample(key) {
+            if (sampleData[key]) {
+                runScannerPipeline(sampleData[key]);
+            }
+        }
+
+        function runScannerPipeline(data) {
+            currentActiveData = data;
+            document.getElementById('uploadBox').classList.add('hidden');
+            document.getElementById('resultBox').classList.add('hidden');
+            document.getElementById('pipelineBox').classList.remove('hidden');
+            document.getElementById('pipelineImage').src = data.image;
+
+            const steps = [
+                { text: "Preprocessing Image (Resize to 224x224)...", stepId: "step1" },
+                { text: "Extracting Convolutional Feature Maps...", stepId: "step2" },
+                { text: "Running Softmax Model Inference...", stepId: "step3" },
+                { text: "Fetching Verified Remedies & Research Data...", stepId: "step4" }
+            ];
+
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index < steps.length) {
+                    document.getElementById('pipelineStatusText').innerText = steps[index].text;
+                    document.getElementById(steps[index].stepId).className = "p-2 rounded-xl bg-agri-600 text-white font-bold shadow-sm transition-all";
+                    index++;
+                } else {
+                    clearInterval(interval);
+                    showResults(data);
+                }
+            }, 350);
+        }
+
+        function showResults(data) {
+            document.getElementById('pipelineBox').classList.add('hidden');
+            document.getElementById('resultBox').classList.remove('hidden');
+
+            document.getElementById('resultDiseaseTitle').innerText = data.title;
+            document.getElementById('resultCropType').innerHTML = `Crop Species: <span class="font-bold text-slate-800">${data.crop}</span>`;
+            document.getElementById('resultConfidenceText').innerText = data.confidence;
+            document.getElementById('resultImage').src = data.image;
+
+            const organicEl = document.getElementById('organicText');
+            if (organicEl) organicEl.innerText = data.organic;
+
+            const chemicalEl = document.getElementById('chemicalText');
+            if (chemicalEl) chemicalEl.innerText = data.chemical;
+
+            renderChart(data.confidenceVal);
+        }
+
+        function speakDiagnosis() {
+            if (!('speechSynthesis' in window)) {
+                alert("Voice readout is not supported on this browser.");
+                return;
+            }
+
+            const voiceBtn = document.getElementById('voiceBtn');
+            const voiceText = document.getElementById('voiceText');
+            const voiceIcon = document.getElementById('voiceIcon');
+
+            if (isSpeaking) {
+                window.speechSynthesis.cancel();
+                isSpeaking = false;
+                if (voiceText) voiceText.innerText = "Listen (শুনুন)";
+                if (voiceIcon) voiceIcon.className = "fa-solid fa-volume-high text-emerald-600 text-sm";
+                return;
+            }
+
+            const speechText = `Diagnosis result: ${currentActiveData.title}. AI Confidence score is ${currentActiveData.confidence}. Organic remedy: ${currentActiveData.organic}`;
+            const utterance = new SpeechSynthesisUtterance(speechText);
+            utterance.rate = 0.9;
+
+            utterance.onstart = function() {
+                isSpeaking = true;
+                if (voiceText) voiceText.innerText = "Stop Audio";
+                if (voiceIcon) voiceIcon.className = "fa-solid fa-circle-stop text-red-600 text-sm animate-pulse";
+            };
+
+            utterance.onend = function() {
+                isSpeaking = false;
+                if (voiceText) voiceText.innerText = "Listen (শুনুন)";
+                if (voiceIcon) voiceIcon.className = "fa-solid fa-volume-high text-emerald-600 text-sm";
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function renderChart(confidence) {
+            const chartCanvas = document.getElementById('confidenceChart');
+            if (!chartCanvas) return;
+            const ctx = chartCanvas.getContext('2d');
+            if (currentChart) {
+                currentChart.destroy();
+            }
+            currentChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [confidence, 100 - confidence],
+                        backgroundColor: ['#22c55e', '#e2e8f0'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '75%',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { tooltip: { enabled: false } }
+                }
+            });
+        }
+
+        function switchTab(tab) {
+            const organicTab = document.getElementById('tabOrganic');
+            const chemicalTab = document.getElementById('tabChemical');
+            const checklistTab = document.getElementById('tabChecklist');
+
+            if (organicTab) organicTab.classList.add('hidden');
+            if (chemicalTab) chemicalTab.classList.add('hidden');
+            if (checklistTab) checklistTab.classList.add('hidden');
+
+            const organicBtn = document.getElementById('tabOrganicBtn');
+            const chemicalBtn = document.getElementById('tabChemicalBtn');
+            const checklistBtn = document.getElementById('tabChecklistBtn');
+
+            if (organicBtn) organicBtn.className = "pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-600 flex items-center gap-2 whitespace-nowrap";
+            if (chemicalBtn) chemicalBtn.className = "pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-600 flex items-center gap-2 whitespace-nowrap";
+            if (checklistBtn) checklistBtn.className = "pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-600 flex items-center gap-2 whitespace-nowrap";
+
+            if (tab === 'organic') {
+                if (organicTab) organicTab.classList.remove('hidden');
+                if (organicBtn) organicBtn.className = "pb-3 border-b-2 border-agri-600 text-agri-700 font-bold flex items-center gap-2 whitespace-nowrap";
+            } else if (tab === 'chemical') {
+                if (chemicalTab) chemicalTab.classList.remove('hidden');
+                if (chemicalBtn) chemicalBtn.className = "pb-3 border-b-2 border-agri-600 text-agri-700 font-bold flex items-center gap-2 whitespace-nowrap";
+            } else if (tab === 'checklist') {
+                if (checklistTab) checklistTab.classList.remove('hidden');
+                if (checklistBtn) checklistBtn.className = "pb-3 border-b-2 border-agri-600 text-agri-700 font-bold flex items-center gap-2 whitespace-nowrap";
+            }
+        }
+
+        function toggleHeatmap() {
+            const checked = document.getElementById('heatmapToggle').checked;
+            const heatmapLayer = document.getElementById('heatmapLayer');
+            if (heatmapLayer) heatmapLayer.style.opacity = checked ? "1" : "0";
+        }
+
+        function resetScanner() {
+            if (isSpeaking) {
+                window.speechSynthesis.cancel();
+                isSpeaking = false;
+            }
+            document.getElementById('resultBox').classList.add('hidden');
+            document.getElementById('pipelineBox').classList.add('hidden');
+            document.getElementById('uploadBox').classList.remove('hidden');
+        }
+
+        function downloadDiagnosticPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFillColor(20, 83, 45);
+            doc.rect(0, 0, 210, 32, 'F');
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(18);
+            doc.text("AgriVision AI - Diagnostic Report", 14, 18);
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text("Automated Crop Disease Detection System | College Edition", 14, 25);
+            doc.text("Date: " + new Date().toLocaleDateString(), 160, 25);
+
+            doc.setFillColor(240, 253, 244);
+            doc.roundedRect(14, 40, 182, 35, 3, 3, 'F');
+
+            doc.setTextColor(20, 83, 45);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text("Diagnosis: " + currentActiveData.title, 20, 52);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(50, 50, 50);
+            doc.text("Crop Type: " + currentActiveData.crop, 20, 60);
+            doc.text("AI Model Confidence: " + currentActiveData.confidence, 20, 68);
+
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(20, 83, 45);
+            doc.text("1. Organic Treatment & Bio-Control", 14, 88);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(60, 60, 60);
+            const splitOrganic = doc.splitTextToSize(currentActiveData.organic, 180);
+            doc.text(splitOrganic, 14, 96);
+
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(180, 83, 9);
+            doc.text("2. Chemical Control & Dosage Safety", 14, 118);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(60, 60, 60);
+            const splitChemical = doc.splitTextToSize(currentActiveData.chemical, 180);
+            doc.text(splitChemical, 14, 126);
+
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(30, 58, 138);
+            doc.text("3. Research & Scientific Verification Sources", 14, 148);
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(80, 80, 80);
+            doc.text("• ICAR Organic Pathogen Bulletin: https://icar.org.in/", 18, 156);
+            doc.text("• FAO Bio-Pesticide Efficacy Study: https://www.fao.org/", 18, 163);
+            doc.text("• CIBRC Government Safety Registry: http://ppqs.gov.in/", 18, 170);
+
+            doc.setDrawColor(200, 200, 200);
+            doc.line(14, 275, 196, 275);
+            doc.setFontSize(8);
+            doc.setTextColor(120, 120, 120);
+            doc.text("Generated by AgriVision AI System - College Project Demonstration", 14, 282);
+
+            doc.save(`AgriVision_Report_${currentActiveData.title.replace(/\s+/g, '_')}.pdf`);
+        }
+
+        function downloadArchitecturePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFillColor(15, 23, 42);
+            doc.rect(0, 0, 210, 35, 'F');
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(16);
+            doc.text("Crop Disease Detection - Architecture & Viva Guide", 14, 20);
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text("College Web Application Project Architecture Blueprint", 14, 28);
+
+            doc.setTextColor(22, 163, 74);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text("1. Technology Stack Breakdown", 14, 45);
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(50, 50, 50);
+            doc.text("• Front-End: React.js / HTML5 + Tailwind CSS + Canvas Grad-CAM Heatmap", 18, 53);
+            doc.text("• Back-End API: FastAPI (Python) - Asynchronous image processing", 18, 60);
+            doc.text("• AI/ML Engine: TensorFlow / MobileNetV2 (PlantVillage Dataset)", 18, 67);
+            doc.text("• Database: PostgreSQL / SQLite for historical logs & remedies", 18, 74);
+
+            doc.setTextColor(22, 163, 74);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text("2. Key Technical Viva Q&A", 14, 88);
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.text("Q1: How do you prevent overfitting on the PlantVillage dataset?", 14, 96);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(60, 60, 60);
+            doc.text("A: We utilize Data Augmentation (rotation, scaling, color jitter), Dropout (0.3), and Early Stopping.", 14, 102);
+
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.text("Q2: Why MobileNetV2 over standard CNN from scratch?", 14, 112);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(60, 60, 60);
+            doc.text("A: Depthwise separable convolutions significantly reduce parameter count, ensuring sub-50ms inference.", 14, 118);
+
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.text("Q3: How are invalid/non-leaf images handled?", 14, 128);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(60, 60, 60);
+            doc.text("A: Softmax confidence thresholding (<60%) rejects out-of-distribution uploads with user prompts.", 14, 134);
+
+            doc.setDrawColor(200, 200, 200);
+            doc.line(14, 275, 196, 275);
+            doc.setFontSize(8);
+            doc.setTextColor(120, 120, 120);
+            doc.text("AgriVision AI College Project Documentation Blueprint", 14, 282);
+
+            doc.save("AgriVision_System_Architecture_Doc.pdf");
+        }
+
+        function setTheme(mode) {
+            document.body.classList.remove('theme-dark', 'theme-comfort');
+
+            const lightBtn = document.getElementById('btn-theme-light');
+            const darkBtn = document.getElementById('btn-theme-dark');
+            const comfortBtn = document.getElementById('btn-theme-comfort');
+
+            [lightBtn, darkBtn, comfortBtn].forEach(btn => {
+                if(btn) btn.className = "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 bg-slate-800 text-slate-300 hover:text-white border border-slate-700 active:scale-95";
+            });
+
+            if (mode === 'dark') {
+                document.body.classList.add('theme-dark');
+                if(darkBtn) darkBtn.className = "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 bg-blue-600 text-white border border-blue-400 shadow-sm active:scale-95";
+            } else if (mode === 'comfort') {
+                document.body.classList.add('theme-comfort');
+                if(comfortBtn) comfortBtn.className = "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 bg-amber-600 text-white border border-amber-400 shadow-sm active:scale-95";
+            } else {
+                if(lightBtn) lightBtn.className = "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 bg-agri-600 text-white border border-agri-500 shadow-sm active:scale-95";
+            }
+        }
+    </script>
+</body>
+</html>
