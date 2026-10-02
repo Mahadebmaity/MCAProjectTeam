@@ -4,6 +4,7 @@ const passwordInput = document.getElementById("password");
 const rememberMe = document.getElementById("rememberMe");
 const message = document.getElementById("message");
 const togglePassword = document.getElementById("togglePassword");
+const submitButton = loginForm.querySelector('button[type="submit"]');
 
 togglePassword.addEventListener("click", function () {
   if (passwordInput.type === "password") {
@@ -24,7 +25,7 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-loginForm.addEventListener("submit", function (event) {
+loginForm.addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const email = emailInput.value.trim();
@@ -42,20 +43,46 @@ loginForm.addEventListener("submit", function (event) {
     return;
   }
 
-  if (rememberMe.checked) {
-    localStorage.setItem("rememberedEmail", email);
-  } else {
-    localStorage.removeItem("rememberedEmail");
+  submitButton.disabled = true;
+  submitButton.textContent = "Signing in...";
+  message.textContent = "";
+
+  try {
+    const response = await fetch(`${window.API_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      message.style.color = "red";
+      message.textContent = data.message || "Login failed.";
+      return;
+    }
+
+    if (rememberMe.checked) {
+      localStorage.setItem("rememberedEmail", email);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+    }
+
+    localStorage.setItem("authToken", data.token);
+    localStorage.setItem("authUser", JSON.stringify(data.user));
+
+    message.style.color = "green";
+    message.textContent = "Login successful! Redirecting...";
+
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 500);
+  } catch (error) {
+    console.error(error);
+    message.style.color = "red";
+    message.textContent = "Unable to connect to the backend server.";
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Sign In";
   }
-
-  message.style.color = "green";
-  message.textContent = "Login successful!";
-
-  console.log({
-    email,
-    password
-  });
-
-  //Redirect to Dashboard (same pages/ folder)
-  window.location.href = "dashboard.html";
 });

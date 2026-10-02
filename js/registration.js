@@ -1,7 +1,8 @@
 const form = document.getElementById("registrationForm");
 const message = document.getElementById("message");
+const submitButton = form.querySelector('button[type="submit"]');
 
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const name = document.getElementById("name").value.trim();
@@ -32,17 +33,40 @@ form.addEventListener("submit", function (event) {
     return;
   }
 
-  message.style.color = "green";
-  message.textContent = "Registration successful!";
+  submitButton.disabled = true;
+  submitButton.textContent = "Creating account...";
+  message.textContent = "";
 
-  console.log({
-    name,
-    email,
-    phone,
-    password
-  });
+  try {
+    const response = await fetch(`${window.API_BASE_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, phone, password }),
+    });
 
-  form.reset();
+    const data = await response.json();
+
+    if (!response.ok) {
+      message.style.color = "red";
+      message.textContent = data.message || "Registration failed.";
+      return;
+    }
+
+    message.style.color = "green";
+    message.textContent = "Registration successful! Redirecting to login...";
+    form.reset();
+
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1200);
+  } catch (error) {
+    console.error(error);
+    message.style.color = "red";
+    message.textContent = "Unable to connect to the backend server.";
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Register";
+  }
 });
 
 function togglePassword(inputId, element) {
