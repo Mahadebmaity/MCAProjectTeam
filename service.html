@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | MCA Project Team</title>
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="service.css">
+    <!-- Services CSS -->
+    <link rel="stylesheet" href="service2.css">
+</head>
+<script src="service.js"></script>
+<body>
+<div class="app-layout">
+ <!-- ================================================== SIDEBAR =================================================== -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-logo">
+                <!--<span></span>-->
+            </div>
+            <div class="brand-info">
+                <h2>MCA Project</h2>
+                <h2>Team</h2>
+                <p>Build · Collaborate · Grow</p>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+            </a>
+            <a href="projects.html" class="nav-item">
+                <span class="nav-icon">💻</span>
+                <span>Projects</span>
+            </a>
+            <a href="services.html" class="nav-item active">
+                <span class="nav-icon">💡</span>
+                <span>Services</span>
+            </a>
+            <a href="reports.html" class="nav-item">
+                <span class="nav-icon">📄</span>
+                <span>Reports</span>
+            </a>
+            <a href="notifications.html" class="nav-item">
+                <span class="nav-icon">🔕</span>
+                <span>Notifications</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <!-- Sidebar decoration -->
+        <div class="sidebar-decoration">
+            <div class="yellow-line"></div>
+            <p>
+                Great things<br>
+                happen when<br>
+                we work together.
+            </p>
+        </div>
+    </aside>
+ <!-- ==================================================  MAIN CONTENT  =================================================== -->
+    <main class="main-content">
+  <!-- ================================================== TOPBAR  =================================================== -->
+        <header class="topbar">
+            <div class="search-box">
+                <span class="search-icon">⌕</span>
+                <input type="search" placeholder="Search projects, tasks, or anything...">
+            </div>
+            <div class="topbar-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    🌙
+                </button>
+                <div class="user-avatar">
+                    <span>●</span>
+                </div>
+            </div>
+        </header>
+ <!-- ==================================================  SERVICES HERO  =================================================== -->
+        <section class="services-hero">
+            <!-- Animated background shapes -->
+            <div class="hero-shape shape-one"></div>
+            <div class="hero-shape shape-two"></div>
+            <div class="hero-shape shape-three"></div>
+            <div class="hero-text">
+                <span class="hero-label">
+                    WHAT WE DO
+                </span>
+                <h1>
+                    Turning ideas<br>
+                    into <span>digital impact.</span>
+                </h1>
+                <p>
+                    We combine development, design, technology and
+                    teamwork to create useful, responsive and
+                    engaging digital experiences.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#services" class="primary-btn">
+                        Explore Services
+                        <span>→</span>
+                    </a>
+                    <a href="#process" class="hero-outline-btn">
+                        How We Work
+                    </a>
+                </div>
+            </div>
+            <!-- Animated service visual -->
+            <div class="service-visual">
+                <div class="visual-ring ring-one"></div>
+                <div class="visual-ring ring-two"></div>
+                <div class="visual-center">
+                    <span>✦</span>
+                    <strong>TEAM</strong>
+                    <small>INNOVATION</small>
+                </div>
+                <div class="orbit-icon icon-one">
+                    💻
+                </div>
+                <div class="orbit-icon icon-two">
+                    🎨
+                </div>
+                <div class="orbit-icon icon-three">
+                    ⚡
+                </div>
+                <div class="orbit-icon icon-four">
+                    🔀
+                </div>
+            </div>
+        </section>
+ <!-- ================================================== STATS =================================================== -->
+        <section class="service-stats">
+            <div class="stat-item">
+                <span class="stat-icon">🚀</span>
+                <div>
+                    <strong data-count="6">0</strong>
+                    <p>Core Services</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">👨‍💻</span>
+                <div>
+                    <strong data-count="4">0</strong>
+                    <p>Team Members</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">💡</span>
+                <div>
+                    <strong data-count="10">0</strong>
+                    <p>Technologies</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">🤝</span>
+                <div>
+                    <strong data-count="100">0</strong>
+                    <p>% Collaboration</p>
+                </div>
+            </div>
+        </section>
+ <!-- ================================================== SERVICES  =================================================== -->
+        <section class="services-section" id="services">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">
+                        OUR EXPERTISE
+                    </span>
+                    <h2>
+                        Services we bring<br>
+                        to every project.
+                    </h2>
+                </div>
+                <p>
+                    From the first idea to the final product,
+                    our team covers the essential areas needed
+                    to build a complete digital experience.
+                </p>
+            </div>
+            <div class="services-grid">
+                <!-- SERVICE 1 -->
+                <article class="service-card service-blue reveal">
+                    <div class="service-number">  01 </div>
+                    <div class="service-icon"> 💻 </div>
+                    <h3> Web Development </h3>
+                    <p>
+                        Building responsive, accessible and
+                        user-friendly websites using modern
+                        frontend technologies.
+                    </p>
+                    <div class="service-tags">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <a href="#process" class="service-link"> Learn more
+                        <span>→</span>
+                    </a>
+                </article>
+                <!-- SERVICE 2 -->
+                <article class="service-card service-purple reveal">
+                    <div class="service-number"> 02 </div>
+                    <div class="service-icon"> 🎨 </div>
+                    <h3> UI/UX Design </h3>
+                    <p>
+                        Designing clean, accessible and intuitive
+                        interfaces that make digital products
+                        easier and more enjoyable to use.
+                    </p>
+                    <div class="service-tags">
+                        <span>Wireframes</span>
+                        <span>UI Design</span>
+                        <span>UX</span>
+                    </div>
+                    <a href="#process" class="service-link"> Learn more
+                        <span>→</span>
+                    </a>
+                </article>
+                <!-- SERVICE 3 -->
+                <article class="service-card service-green reveal">
+                    <div class="service-number"> 03 </div>
+                    <div class="service-icon"> ⚡ </div>
+                    <h3> Frontend Development</h3>
+                    <p>
+                        Creating responsive components,
+                        navigation, cards, forms and interactive
+                        pages for modern web applications.
+                    </p>
+                    <div class="service-tags">
+                        <span>Components</span>
+                        <span>Responsive</span>
+                        <span>Interaction</span>
+                    </div>
+                    <a href="#process" class="service-link"> Learn more
+                        <span>→</span>
+                    </a>
+                </article>
+                <!-- SERVICE 4 -->
+                <article class="service-card service-orange reveal">
+                    <div class="service-number"> 04 </div>
+                    <div class="service-icon"> 📋 </div>
+                    <h3>
+                        Project Management
+                    </h3>
+                    <p>
+                        Organizing tasks, responsibilities,
+                        branches and milestones so the entire
+                        team can work efficiently.
+                    </p>
+                    <div class="service-tags">
+                        <span>Planning</span>
+                        <span>Tasks</span>
+                        <span>Workflow</span>
+                    </div>
+                    <a href="#process" class="service-link"> Learn more
+                        <span>→</span>
+                    </a>
+                </article>
+                <!-- SERVICE 5 -->
+                <article class="service-card service-teal reveal">
+                    <div class="service-number"> 05 </div>
+                    <div class="service-icon"> 🔀 </div>
+                    <h3>
+                        Git &amp; Team Collaboration
+                    </h3>
+                    <p>
+                        Using branches, commits and structured
+                        file ownership to help multiple developers
+                        work on one project.
+                    </p>
+                    <div class="service-tags">
+                        <span>Git</span>
+                        <span>Branches</span>
+                        <span>Collaboration</span>
+                    </div>
+                    <a href="#process" class="service-link"> Learn more
+                        <span>→</span>
+                    </a>
+                </article>
+                <!-- SERVICE 6 -->
+                <article class="service-card service-pink reveal">
+                    <div class="service-number"> 06 </div>
+                    <div class="service-icon"> 📝
+                    </div>
+                    <h3>
+                        Testing &amp; Documentation
+                    </h3>
+                    <p>
+                        Testing features, identifying problems,
+                        fixing issues and maintaining clear project
+                        documentation and reports.
+                    </p>
+                    <div class="service-tags">
+                        <span>Testing</span>
+                        <span>Debugging</span>
+                        <span>Reports</span>
+                    </div>
+                    <a href="#process" class="service-link"> Learn more
+                        <span>→</span>
+                    </a>
+                </article>
+            </div>
+        </section>
+        <!-- ================================================== HOW WE WORK =================================================== -->
+        <section class="process-section" id="process">
+            <div class="process-heading">
+                <span class="section-kicker">  OUR WORKFLOW </span>
+                <h2>
+                    How we turn an idea<br>
+                    into a finished project.
+                </h2>
+                <p>
+                    Our team follows a simple collaborative process
+                    that keeps development organized and transparent.
+                </p>
+            </div>
+            <div class="process-timeline">
+                <div class="process-line"></div>
+                <!-- STEP 1 -->
+                <div class="process-step reveal">
+                    <div class="step-number"> 01 </div>
+                    <div class="step-content">
+                        <span>STEP ONE</span>
+                        <h3> Discover </h3>
+                        <p>
+                            Understand the problem, research the
+                            requirements and define what the project
+                            needs to achieve.
+                        </p>
+                    </div>
+                </div>
+                <!-- STEP 2 -->
+                <div class="process-step reveal">
+                    <div class="step-number"> 02 </div>
+                    <div class="step-content">
+                        <span>STEP TWO</span>
+                        <h3> Design </h3>
+                        <p>
+                            Plan the interface, page structure,
+                            components and user experience before
+                            development begins.
+                        </p>
+                    </div>
+                </div>
+                <!-- STEP 3 -->
+                <div class="process-step reveal">
+                    <div class="step-number"> 03 </div>
+                    <div class="step-content">
+                        <span>STEP THREE</span>
+                        <h3> Develop </h3>
+                        <p>
+                            Build individual modules using dedicated
+                            branches while following the project's
+                            shared design system.
+                        </p>
+                    </div>
+                </div>
+                <!-- STEP 4 -->
+                <div class="process-step reveal">
+                    <div class="step-number"> 04 </div>
+                    <div class="step-content">
+                        <span>STEP FOUR</span>
+                        <h3> Test &amp; Deliver </h3>
+                        <p>
+                            Test every feature, resolve issues,
+                            integrate the modules and prepare the
+                            final project.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ================================================== TECHNOLOGIES  =================================================== -->
+        <section class="technology-section">
+            <div class="technology-content">
+                <span class="section-kicker"> TECHNOLOGY </span>
+                <h2>
+                    Tools that power<br>
+                    our workflow.
+                </h2>
+                <p>
+                    We use a combination of web technologies and
+                    collaboration tools to keep development
+                    efficient and organized.
+                </p>
+            </div>
+            <div class="technology-grid">
+                <div class="technology-card">
+                    <span>🌐</span>
+                    <strong>HTML5</strong>
+                    <small>Structure</small>
+                </div>
+                <div class="technology-card">
+                    <span>🎨</span>
+                    <strong>CSS3</strong>
+                    <small>Styling</small>
+                </div>
+                <div class="technology-card">
+                    <span>⚡</span>
+                    <strong>JavaScript</strong>
+                    <small>Interaction</small>
+                </div>
+                <div class="technology-card">
+                    <span>🔀</span>
+                    <strong>Git</strong>
+                    <small>Version Control</small>
+                </div>
+                <div class="technology-card">
+                    <span>🐙</span>
+                    <strong>GitHub</strong>
+                    <small>Collaboration</small>
+                </div>
+                <div class="technology-card">
+                    <span>🧩</span>
+                    <strong>VS Code</strong>
+                    <small>Development</small>
+                </div>
+            </div>
+        </section>
+ <!-- ================================================== CTA =================================================== -->
+        <section class="services-cta">
+            <div class="cta-decoration"> ✦ </div>
+            <div>
+                <span class="section-kicker">   LET'S BUILD  </span>
+                <h2>
+                    Have an idea?<br>
+                    Let's turn it into reality.
+                </h2>
+                <p>
+                    Explore our projects or connect with our team
+                    to learn more about what we're building.
+                </p>
+            </div>
+            <div class="cta-buttons">
+                <a href="projects.html" class="primary-btn"> View Projects
+                    <span>→</span>
+                </a>
+                <a href="about.html" class="cta-secondary"> Meet the Team </a>
+            </div>
+        </section>
+        <!-- ================================================== FOOTER =================================================== -->
+        <footer class="page-footer">
+            <p>
+                © 2026 MCA Project Team.
+                Built with teamwork.
+            </p>
+        </footer>
+    </main>
+</div>
+</body>
+</html>
