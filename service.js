@@ -388,8 +388,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".nav-item").forEach(
             (item) => {
                 const href = item.getAttribute("href");
-                if (href === currentPage) {
+                if (href && href.split("/").pop() === currentPage) {
                     item.classList.add("active");}
             }
         );
+    /* ================================================= AUTH-AWARE DASHBOARD LINK ================================================= */
+    /*
+     * About, Services and Contact are PUBLIC pages.
+     * The Dashboard sidebar link is only visible when the user is logged in.
+     */
+    const dashboardNavLink = document.getElementById("dashboardNavLink");
+    if (dashboardNavLink) {
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+            dashboardNavLink.style.display = "none";
+        }
+    }
 });

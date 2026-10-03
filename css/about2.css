@@ -556,3 +556,38 @@
         flex-wrap: wrap;
     }
 }
+
+/* ========================================= DARK MODE OVERRIDES ========================================= */
+body.dark-mode .floating-card {
+    background: rgba(23, 38, 51, 0.95);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+body.dark-mode .floating-card small {
+    color: var(--text-light);
+}
+body.dark-mode .task-list li {
+    color: var(--text-light);
+}
+body.dark-mode .social-link {
+    background: #203545;
+    color: #7ee0d2;
+}
+body.dark-mode .social-link:hover {
+    background: var(--primary);
+    color: white;
+}
+body.dark-mode .member-number {
+    color: var(--text-muted);
+}
+body.dark-mode .branch-row {
+    color: var(--text-light);
+}
+body.dark-mode .intro-text {
+    color: var(--text-light);
+}
+body.dark-mode .section-title-row p,
+body.dark-mode .member-count span {
+    color: var(--text-light);
+}
+

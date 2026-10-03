@@ -30,8 +30,8 @@ input {
 
 .sidebar {
     height: 100vh;
+    max-height: 100vh;
     width: 250px;
-    min-height: 100vh;
     background: #f7fbfd;
     display: flex;
     flex-direction: column;
@@ -40,8 +40,19 @@ input {
     left: 0;
     top: 0;
     bottom: 0;
-    overflow-y: auto;
+    overflow-y: auto !important;
     overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #176b8a transparent;
+    -webkit-overflow-scrolling: touch;
+    z-index: 100;
+}
+
+.sidebar .brand,
+.sidebar .menu,
+.sidebar .sidebar-quote,
+.sidebar .logout {
+    flex-shrink: 0;
 }
 
 
@@ -200,6 +211,7 @@ input {
     transform: rotate(-12deg);
 
     z-index: 0;
+    pointer-events: none;
 }
 
 
@@ -221,6 +233,7 @@ input {
     transform: rotate(-12deg);
 
     z-index: 1;
+    pointer-events: none;
 }
 
 
@@ -1446,10 +1459,11 @@ input {
 
     .sidebar {
         position: relative;
-
         width: 100%;
-
+        height: auto !important;
+        max-height: none;
         min-height: auto;
+        overflow-y: visible;
     }
 
     .dashboard {

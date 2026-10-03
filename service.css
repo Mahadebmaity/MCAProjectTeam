@@ -61,16 +61,27 @@ input {
 /* =========================================SIDEBAR========================================= */
 .sidebar {
     width: var(--sidebar-width);
-    min-height: 100vh;
+    height: 100vh;
+    max-height: 100vh;
     background: #f5f9fc;
     border-right: 1px solid #d9e5eb;
     position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+    -webkit-overflow-scrolling: touch;
     z-index: 50;
+    display: flex;
+    flex-direction: column;
 }
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
 /* BRAND */
 .brand {
     height: 125px;
@@ -78,6 +89,7 @@ input {
     align-items: center;
     gap: 17px;
     padding: 25px 30px;
+    flex-shrink: 0;
 }
 .brand-logo {
     width: 52px;
@@ -108,6 +120,7 @@ input {
 /* NAVIGATION */
 .sidebar-nav {
     padding-top: 14px;
+    flex-shrink: 0;
 }
 .nav-item {
     height: 63px;
@@ -137,28 +150,26 @@ input {
 }
 /* SIDEBAR DECORATION */
 .sidebar-decoration {
-    position: absolute;
-    left: -40px;
-    bottom: -60px;
-    width: 255px;
-    height: 210px;
-    border-radius: 50%;
+    position: relative;
+    margin: 30px 18px 30px;
+    width: auto;
+    border-radius: 20px;
     background: #bce7e5;
-    padding: 78px 0 0 90px;
+    padding: 22px 20px;
+    flex-shrink: 0;
 }
 .yellow-line {
-    width: 58px;
-    height: 5px;
+    width: 48px;
+    height: 4px;
     background: var(--yellow);
     border-radius: 5px;
-    position: absolute;
-    top: 30px;
-    left: 50px;
+    margin-bottom: 12px;
 }
 .sidebar-decoration p {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: #205e76;
+    line-height: 1.45;
 }
 /* ========================================= MAIN CONTENT========================================= */
 .main-content {
