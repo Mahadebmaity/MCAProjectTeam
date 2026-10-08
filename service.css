@@ -78,19 +78,9 @@ input {
     display: flex;
     flex-direction: column;
 }
-
-.sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: var(--primary);
-    border-radius: 10px;
-}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
 /* BRAND */
 .brand {
@@ -291,12 +281,6 @@ body.dark-mode .search-box {
 }
 body.dark-mode .nav-item:hover {
     background: #1d3947;
-}
-body.dark-mode .sidebar-decoration {
-    background: #193342;
-}
-body.dark-mode .sidebar-decoration p {
-    color: #7ee0d2;
 }
 body.dark-mode .member-card,
 body.dark-mode .ownership-section,

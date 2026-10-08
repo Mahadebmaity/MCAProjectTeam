@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | MCA Project Team</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="about.css">
+    <style>
+        .contact-wrap {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 18px;
+            padding: 60px 30px;
+            text-align: center;
+        }
+        .contact-wrap h1 {
+            font-size: clamp(32px, 5vw, 54px);
+            letter-spacing: -1.5px;
+        }
+        .contact-wrap p { color: var(--text-light); font-size: 18px; max-width: 540px; }
+        .contact-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 48px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .contact-card a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            transition: color .2s;
+        }
+        .contact-card a:last-child { border-bottom: none; }
+        .contact-card a:hover { color: var(--primary); }
+        .contact-card .ic { font-size: 24px; }
+        .back-link {
+            margin-top: 28px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        body.dark-mode .contact-card { background: var(--surface); }
+    </style>
+    <script src="about.js" defer></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo"><span></span></div>
+                <div class="brand-info">
+                    <h2>MCA Project</h2>
+                    <h2>Team</h2>
+                    <p>Build · Collaborate · Grow</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <span class="nav-icon">🏠</span><span>Home</span>
+                </a>
+                <a href="about.html" class="nav-item">
+                    <span class="nav-icon">👥</span><span>About</span>
+                </a>
+                <a href="service.html" class="nav-item">
+                    <span class="nav-icon">💡</span><span>Services</span>
+                </a>
+                <a href="pages/project.html" class="nav-item">
+                    <span class="nav-icon">💻</span><span>Projects</span>
+                </a>
+                <a href="contact.html" class="nav-item active">
+                    <span class="nav-icon">✉️</span><span>Contact</span>
+                </a>
+                <a href="pages/dashboard.html" class="nav-item" id="dashboardNavLink">
+                    <span class="nav-icon">📊</span><span>Dashboard</span>
+                </a>
+            </nav>
+            <div class="sidebar-decoration">
+                <div class="yellow-line"></div>
+                <p>Great things<br>happen when<br>we work together.</p>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="contact-wrap">
+            <span style="font-size:13px;font-weight:800;letter-spacing:1.4px;color:var(--primary);">GET IN TOUCH</span>
+            <h1>Contact the Team</h1>
+            <p>Have questions, feedback, or collaboration ideas? Reach out to any team member directly.</p>
+
+            <div class="contact-card">
+                <a href="mailto:maitymahadeb530@gmail.com">
+                    <span class="ic">📧</span>
+                    <span><strong>Mahadeb Maity</strong> — maitymahadeb530@gmail.com</span>
+                </a>
+                <a href="mailto:kanikamondal642@gmail.com">
+                    <span class="ic">📧</span>
+                    <span><strong>Kanika Mondal</strong> — kanikamondal642@gmail.com</span>
+                </a>
+                <a href="mailto:jsamanta2003@gmail.com">
+                    <span class="ic">📧</span>
+                    <span><strong>Jayanta Samanta</strong> — jsamanta2003@gmail.com</span>
+                </a>
+                <a href="mailto:joyeesantra@gmail.com">
+                    <span class="ic">📧</span>
+                    <span><strong>Joyee Santra</strong> — joyeesantra@gmail.com</span>
+                </a>
+            </div>
+
+            <a href="about.html" class="back-link">← Meet the full team</a>
+        </main>
+    </div>
+</body>
+</html>

@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About | MCA Project Team</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Main/global stylesheet -->
-    <link rel="stylesheet" href="ok.css">
+    <link rel="stylesheet" href="about.css">
     <!-- Team page stylesheet -->
-    <link rel="stylesheet" href="ok2.css">
+    <link rel="stylesheet" href="about2.css">
+    <script src="about.js" defer></script>
 </head>
-<script src="about.js"></script>
 <body>
     <div class="app-layout">
         <!-- =========================SIDEBAR========================== -->
@@ -26,32 +30,28 @@
             </div>
             <nav class="sidebar-nav">
                 <a href="index.html" class="nav-item">
-                    <span class="nav-icon">📊</span>
-                    <span>Dashboard</span>
+                    <span class="nav-icon">🏠</span>
+                    <span>Home</span>
                 </a>
-                <a href="profile.html" class="nav-item">
-                    <span class="nav-icon">👤</span>
-                    <span>Profile</span>
+                <a href="about.html" class="nav-item active">
+                    <span class="nav-icon">👥</span>
+                    <span>About</span>
                 </a>
-                <a href="projects.html" class="nav-item">
-                    <span class="nav-icon">💻</span>
-                    <span>Projects</span>
-                </a>
-                <a href="services.html" class="nav-item">
+                <a href="service.html" class="nav-item">
                     <span class="nav-icon">💡</span>
                     <span>Services</span>
                 </a>
-                <a href="reports.html" class="nav-item">
-                    <span class="nav-icon">📄</span>
-                    <span>Reports</span>
+                <a href="pages/project.html" class="nav-item">
+                    <span class="nav-icon">💻</span>
+                    <span>Projects</span>
                 </a>
-                <a href="notifications.html" class="nav-item">
-                    <span class="nav-icon">🔕</span>
-                    <span>Notifications</span>
+                <a href="contact.html" class="nav-item">
+                    <span class="nav-icon">✉️</span>
+                    <span>Contact</span>
                 </a>
-                <a href="settings.html" class="nav-item">
-                    <span class="nav-icon">⚙️</span>
-                    <span>Settings</span>
+                <a href="pages/dashboard.html" class="nav-item" id="dashboardNavLink">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
                 </a>
             </nav>
             <div class="sidebar-decoration">
@@ -169,7 +169,7 @@
                     <article class="member-card member-one">
                         <div class="member-card-top">
                             <div class="member-photo">
-                                <img src="C:\Users\KANIKA\Pictures\Saved Pictures\Screenshot_2026-10-01-14-57-27-91_40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Member 1">
+                                <img src="image/Screenshot_2026-10-01-14-57-27-91_40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Mahadeb Maity">
                             </div>
                             <div class="member-heading">
                                 <span class="member-number"> MEMBER 01 </span>
@@ -203,16 +203,16 @@
                             </li>
                         </ul>
                         <div class="member-footer">
-                            <a href="https://github.com/mahadebmaity" class="social-link"> GitHub </a>
-                            <a href="https://www.linkedin.com/in/mahadeb-maity2003/" class="social-link"> LinkedIn </a>
-                            <a href="#" class="social-link"> Portfolio </a>
+                            <a href="https://github.com/mahadebmaity" class="social-link" target="_blank" rel="noopener"> GitHub </a>
+                            <a href="https://www.linkedin.com/in/mahadeb-maity2003/" class="social-link" target="_blank" rel="noopener"> LinkedIn </a>
+                            <a href="mailto:maitymahadeb530@gmail.com" class="social-link"> Email </a>
                         </div>
                     </article>
-                    <!-- ========================= MEMBER  ========================== -->
+                    <!-- ========================= MEMBER 2 ========================== -->
                     <article class="member-card member-two">
                         <div class="member-card-top">
                             <div class="member-photo">
-                                <img src="C:\Users\KANIKA\Pictures\Saved Pictures\Screenshot_2026-10-01-15-12-48-73_40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Member 2">
+                                <img src="image/Screenshot_2026-10-01-15-12-48-73_40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Kanika Mondal">
                             </div>
                             <div class="member-heading">
                                 <span class="member-number">
@@ -237,48 +237,32 @@
                             <li>
                                 Includes member photos, bios, and social links.
                             </li>
-
                             <li>
                                 Styles isolated module:
                                 <code>css/team.css</code>
                             </li>
-
                             <li>
                                 Adds assets to
                                 <code>assets/members/</code>
                             </li>
-
                         </ul>
-
-
                         <div class="member-footer">
-
-                            <a href="#" class="social-link">
+                            <a href="https://github.com/Kanika420" class="social-link" target="_blank" rel="noopener">
                                 GitHub
                             </a>
-
-                            <a href="#" class="social-link">
+                            <a href="https://linkedin.com/in/kanikama" class="social-link" target="_blank" rel="noopener">
                                 LinkedIn
                             </a>
-
-                            <a href="#" class="social-link">
-                                Portfolio
+                            <a href="mailto:kanikamondal642@gmail.com" class="social-link">
+                                Email
                             </a>
-
                         </div>
-
                     </article>
-
-
-                    <!-- =========================
-                         MEMBER 3
-                    ========================== -->
+                    <!-- ========================= MEMBER 3 ========================== -->
                     <article class="member-card member-three">
-
                         <div class="member-card-top">
-
                             <div class="member-photo">
-                                <img src="C:\Users\KANIKA\Pictures\Saved Pictures\Screenshot_2026-10-01-15-06-28-54_40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Member 3">
+                                <img src="image/Screenshot_2026-10-01-15-06-28-54_40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Jayanta Samanta">
                             </div>
                             <div class="member-heading">
                                 <span class="member-number"> MEMBER 03 </span>
@@ -288,7 +272,7 @@
                         </div>
                         <div class="branch-row">
                             <span>Branch:</span>
-                            <code>  feature/project-gallery  </code>
+                            <code> feature/project-gallery </code>
                         </div>
                         <ul class="task-list">
                             <li>
@@ -307,26 +291,26 @@
                             </li>
                         </ul>
                         <div class="member-footer">
-                            <a href="https://github.com/jayantasamanta" class="social-link"> GitHub </a>
-                            <a href="https://linkedin.com/in/jayantasamanta" class="social-link"> LinkedIn </a>
-                            <a href="#" class="social-link"> Portfolio </a>
+                            <a href="https://github.com/jayanta7865" class="social-link" target="_blank" rel="noopener"> GitHub </a>
+                            <a href="https://www.linkedin.com/in/jayanta-samanta-dev/" class="social-link" target="_blank" rel="noopener"> LinkedIn </a>
+                            <a href="mailto:jsamanta2003@gmail.com" class="social-link"> Email </a>
                         </div>
                     </article>
-                    <!-- ========================  MEMBER 4  ========================== -->
+                    <!-- ======================== MEMBER 4 ========================== -->
                     <article class="member-card member-four">
                         <div class="member-card-top">
                             <div class="member-photo">
-                                <img src="C:\Users\KANIKA\Pictures\Saved Pictures\Screenshot_2026-10-01-14-59-21-12_40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Member 4">
+                                <img src="image/Screenshot_2026-10-01-14-59-21-12_40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Joyee Santra">
                             </div>
                             <div class="member-heading">
-                                <span class="member-number">  MEMBER 04  </span>
+                                <span class="member-number"> MEMBER 04 </span>
                                 <h3>JOYEE SANTRA </h3>
-                                <span class="role-badge role-orange">  FRONTEND DEV C  </span>
+                                <span class="role-badge role-orange"> FRONTEND DEV C </span>
                             </div>
                         </div>
                         <div class="branch-row">
                             <span>Branch:</span>
-                            <code>   feature/contact-darkmode  </code>
+                            <code> feature/contact-darkmode </code>
                         </div>
                         <ul class="task-list">
                             <li>
@@ -347,9 +331,9 @@
                             </li>
                         </ul>
                         <div class="member-footer">
-                            <a href="https://github.com/joyeesantra" class="social-link"> GitHub </a>
-                            <a href="https://www.linkedin.com/in/joyee-santra-019897433" class="social-link"> LinkedIn </a>
-                            <a href="#" class="social-link"> Portfolio </a>
+                            <a href="https://github.com/joyeesantra" class="social-link" target="_blank" rel="noopener"> GitHub </a>
+                            <a href="https://www.linkedin.com/in/joyee-santra-019897433" class="social-link" target="_blank" rel="noopener"> LinkedIn </a>
+                            <a href="contact.html" class="social-link"> Contact </a>
                         </div>
                     </article>
                 </div>
@@ -459,7 +443,7 @@
                         allowing every member to contribute independently.
                     </p>
                 </div>
-                <a href="projects.html" class="primary-btn">
+                <a href="pages/project.html" class="primary-btn">
                     Explore Projects
                     <span>→</span>
                 </a>
@@ -471,7 +455,5 @@
             </footer>
         </main>
     </div>
-    <!-- JavaScript -->
-    <!--<script src="js/app.js"></script> -->
 </body>
 </html>
